@@ -2,11 +2,11 @@ import { useState, useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 import PlaceItem from "../PlaceItem";
 
-interface SearchSectionProps {
-  addPlace: (place: any, timeOfDay: string) => void;
-}
+// interface SearchSectionProps {
+//   addPlace: (place: google.maps.places.PlaceResult, timeOfDay: string) => void;
+// }
 
-export default function SearchSection({ addPlace }: SearchSectionProps) {
+export default function SearchSection() {
   const [searchResults, setSearchResults] = useState<
     google.maps.places.PlaceResult[]
   >([]);

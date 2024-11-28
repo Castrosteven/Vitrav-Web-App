@@ -1,4 +1,5 @@
 import { useDrag } from "react-dnd";
+import { useRef } from "react";
 
 interface PlaceItemProps {
   place: google.maps.places.PlaceResult;
@@ -6,6 +7,8 @@ interface PlaceItemProps {
 }
 
 export default function PlaceItem({ place, fromTime }: PlaceItemProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "PLACE",
     item: { place, fromTime },
@@ -14,9 +17,10 @@ export default function PlaceItem({ place, fromTime }: PlaceItemProps) {
     }),
   }));
 
+  drag(ref);
   return (
     <div
-      ref={drag}
+      ref={ref}
       className={`p-2 mb-2 border rounded cursor-move ${
         isDragging ? "opacity-50" : ""
       }`}

@@ -1,14 +1,22 @@
 import { useDrop } from "react-dnd";
 import { X } from "lucide-react";
 import PlaceItem from "../PlaceItem";
+import { useRef } from "react";
 
 interface ItinerarySectionProps {
   places: {
-    [key: string]: any[];
+    [key: string]: google.maps.places.PlaceResult[];
   };
-  addPlace: (place: any, timeOfDay: string) => void;
-  removePlace: (place: any, timeOfDay: string) => void;
-  movePlace: (place: any, fromTime: string, toTime: string) => void;
+  addPlace: (place: google.maps.places.PlaceResult, timeOfDay: string) => void;
+  removePlace: (
+    place: google.maps.places.PlaceResult,
+    timeOfDay: string
+  ) => void;
+  movePlace: (
+    place: google.maps.places.PlaceResult,
+    fromTime: string,
+    toTime: string
+  ) => void;
 }
 
 export default function ItinerarySection({
@@ -40,10 +48,17 @@ export default function ItinerarySection({
 
 interface ItineraryColumnProps {
   timeOfDay: string;
-  places: any[];
-  addPlace: (place: any, timeOfDay: string) => void;
-  removePlace: (place: any, timeOfDay: string) => void;
-  movePlace: (place: any, fromTime: string, toTime: string) => void;
+  places: google.maps.places.PlaceResult[];
+  addPlace: (place: google.maps.places.PlaceResult, timeOfDay: string) => void;
+  removePlace: (
+    place: google.maps.places.PlaceResult,
+    timeOfDay: string
+  ) => void;
+  movePlace: (
+    place: google.maps.places.PlaceResult,
+    fromTime: string,
+    toTime: string
+  ) => void;
 }
 
 function ItineraryColumn({
@@ -53,9 +68,14 @@ function ItineraryColumn({
   removePlace,
   movePlace,
 }: ItineraryColumnProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [, drop] = useDrop(() => ({
     accept: "PLACE",
-    drop: (item: { place: any; fromTime?: string }) => {
+    drop: (item: {
+      place: google.maps.places.PlaceResult;
+      fromTime?: string;
+    }) => {
       if (item.fromTime && item.fromTime !== timeOfDay) {
         movePlace(item.place, item.fromTime, timeOfDay);
       } else if (!item.fromTime) {
@@ -63,9 +83,10 @@ function ItineraryColumn({
       }
     },
   }));
+  drop(ref);
 
   return (
-    <div ref={drop} className="border p-2 rounded min-h-[200px]">
+    <div ref={ref} className="border p-2 rounded min-h-[200px]">
       <h3 className="font-bold mb-2">{timeOfDay}</h3>
       {places.map((place, index) => (
         <div key={index} className="relative">
@@ -73,6 +94,7 @@ function ItineraryColumn({
           <button
             onClick={() => removePlace(place, timeOfDay)}
             className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            aria-label="Remove place"
           >
             <X size={12} />
           </button>
