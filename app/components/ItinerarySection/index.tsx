@@ -2,7 +2,7 @@ import { useDrop } from "react-dnd";
 import { X } from "lucide-react";
 import PlaceItem from "../PlaceItem";
 import { useRef } from "react";
-import { timeOfDay } from "@/app/create-custom/page";
+import { timeOfDay } from "@/app/dashboard/itineraries/custom/page";
 
 interface ItinerarySectionProps {
   places: Record<timeOfDay, google.maps.places.PlaceResult[]>;

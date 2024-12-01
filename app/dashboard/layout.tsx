@@ -53,7 +53,7 @@ export default function Page({ children }: { children: React.ReactNode }) {
             <div className="aspect-video rounded-xl bg-muted/50" />
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div> */}
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+          <div className="min-h-[100vh] flex flex-1 rounded-xl md:min-h-min justify-center items-center">
             {children}
           </div>
         </div>

@@ -24,6 +24,13 @@ export const data = {
   },
   navMain: [
     {
+      title: "Itineraries",
+      url: "/dashboard/itineraries/",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [],
+    },
+    {
       title: "Itinerary Creator",
       url: "#",
       icon: SquareTerminal,

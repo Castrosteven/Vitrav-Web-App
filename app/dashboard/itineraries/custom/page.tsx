@@ -8,6 +8,7 @@ import SearchSection from "@/components/SearchSection";
 import ItinerarySection from "@/components/ItinerarySection";
 import ItineraryForm from "@/components/ItineraryForm";
 import { saveItineraryAction } from "./actions";
+import { Card } from "@/app/components/ui/card";
 
 export type timeOfDay = "Morning" | "Afternoon" | "Evening";
 
@@ -85,14 +86,14 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <Card className="container mx-auto bg-muted/50">
       <DndProvider backend={HTML5Backend}>
         <LoadScript
           googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
           libraries={["places"]}
           version="weekly"
         >
-          <main className="flex flex-col min-h-screen p-4">
+          <main className="flex flex-col  p-4">
             <ItineraryForm
               title={title}
               setTitle={setTitle}
@@ -118,6 +119,6 @@ export default function Home() {
           </main>
         </LoadScript>
       </DndProvider>
-    </div>
+    </Card>
   );
 }

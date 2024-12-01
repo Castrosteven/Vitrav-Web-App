@@ -31,7 +31,9 @@ const RenderActivity = async (place: google.maps.places.PlaceResult) => {
   return (
     <Card key={place.place_id} className="mb-4">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">{place.name}</CardTitle>
+        <CardTitle className="text-lg font-semibold">
+          {place.name} {place.place_id}{" "}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -52,6 +54,7 @@ const RenderActivity = async (place: google.maps.places.PlaceResult) => {
                   >
                     {place.formatted_phone_number}
                   </a>
+                  {`https://places.googleapis.com/v1/${detailData.photos[0].name}/media?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&maxHeightPx=1000&maxWidthPx=1000`}
                 </dd>
               </div>
             )}
@@ -114,7 +117,9 @@ const ActivitiesListSection = async ({
     <section className="mb-8">
       <h2 className="text-2xl font-bold mb-4 flex items-center">
         {icon}
-        <span className="ml-2">{title}</span>
+        <span className="ml-2">
+          {title} {}{" "}
+        </span>
       </h2>
       <div className="space-y-4">
         {listOfActivities.map((activity) => RenderActivity(activity))}

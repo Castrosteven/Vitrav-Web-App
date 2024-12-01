@@ -204,77 +204,73 @@ export default function ItineraryForm() {
   );
 
   return (
-    <div className="p-8 ">
-      <Card className="w-full h-100 overflow-hidden container mx-auto">
-        <CardHeader>
-          <CardTitle>Create Itinerary</CardTitle>
-        </CardHeader>
-        <CardContent className="h-[calc(100vh-8rem)] overflow-y-auto">
-          <form onSubmit={handleSubmit} className="space-y-4 ">
-            <div className="flex gap-8 w-full">
-              <div className="space-y-2">
-                <Label htmlFor="itineraryType">Itinerary Type</Label>
-                <Select
-                  value={formState.itineraryType}
-                  onValueChange={(value) =>
-                    handleInputChange("itineraryType", value)
-                  }
-                >
-                  <SelectTrigger id="itineraryType">
-                    <SelectValue placeholder="Select Itinerary Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(ItineraryTypeEnum).map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type.charAt(0) + type.slice(1).toLowerCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="itineraryTitle">Itinerary Title</Label>
-                <Input
-                  id="itineraryTitle"
-                  value={formState.itineraryTitle}
-                  onChange={(e) =>
-                    handleInputChange("itineraryTitle", e.target.value)
-                  }
-                  required
-                />
-              </div>
-            </div>
-            <div className="flex flex-col md:flex-row justify-between items-start space-y-4 md:space-y-0 md:space-x-4">
-              <div className="w-full md:w-1/2 h-[calc(100vh-22rem)] mb-8">
-                <h2 className="text-lg font-semibold mb-2">
-                  Google Maps Place Types
-                </h2>
-                {renderLeftSection()}
-              </div>
-              <div className="w-full md:w-1/2 h-[calc(100vh-22rem)] flex flex-col">
-                <h2 className="text-xl font-bold mb-2">
-                  Time Of Day Activities
-                </h2>
-                {renderRightSection("RA", "Morning Activities")}
-                {renderRightSection("RB", "Afternoon Activities")}
-                {renderRightSection("RC", "Evening Activities")}
-              </div>
+    <Card className="w-full overflow-hidden container mx-auto bg-muted/50">
+      <CardHeader>
+        <CardTitle>Create Itinerary</CardTitle>
+      </CardHeader>
+      <CardContent className="overflow-y-auto">
+        <form onSubmit={handleSubmit} className="space-y-4 ">
+          <div className="flex gap-8 w-full">
+            <div className="space-y-2">
+              <Label htmlFor="itineraryType">Itinerary Type</Label>
+              <Select
+                value={formState.itineraryType}
+                onValueChange={(value) =>
+                  handleInputChange("itineraryType", value)
+                }
+              >
+                <SelectTrigger id="itineraryType">
+                  <SelectValue placeholder="Select Itinerary Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(ItineraryTypeEnum).map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type.charAt(0) + type.slice(1).toLowerCase()}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <Button type="submit" className="w-full">
-              Create Itinerary
-            </Button>
-          </form>
+            <div className="space-y-2">
+              <Label htmlFor="itineraryTitle">Itinerary Title</Label>
+              <Input
+                id="itineraryTitle"
+                value={formState.itineraryTitle}
+                onChange={(e) =>
+                  handleInputChange("itineraryTitle", e.target.value)
+                }
+                required
+              />
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row justify-between items-start space-y-4 md:space-y-0 md:space-x-4">
+            <div className="w-full md:w-1/2 h-[calc(100vh-22rem)] mb-8">
+              <h2 className="text-lg font-semibold mb-2">
+                Google Maps Place Types
+              </h2>
+              {renderLeftSection()}
+            </div>
+            <div className="w-full md:w-1/2 h-[calc(100vh-22rem)] flex flex-col">
+              <h2 className="text-xl font-bold mb-2">Time Of Day Activities</h2>
+              {renderRightSection("RA", "Morning Activities")}
+              {renderRightSection("RB", "Afternoon Activities")}
+              {renderRightSection("RC", "Evening Activities")}
+            </div>
+          </div>
 
-          {/* <div className="mt-4">
+          <Button type="submit" className="w-full">
+            Create Itinerary
+          </Button>
+        </form>
+
+        {/* <div className="mt-4">
             <h3 className="font-semibold">Form Data:</h3>
             <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
               {JSON.stringify(formState, null, 2)}
             </pre>
           </div> */}
-        </CardContent>
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
