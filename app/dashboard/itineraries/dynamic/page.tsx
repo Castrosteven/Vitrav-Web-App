@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { createNewItem } from "./actions";
 
-import data from "../../../data.json";
+import data from "../../../../../scrapper/data.json";
+import { createNewItem } from "./actions";
 
 export enum ItineraryTypeEnum {
   ROMANTIC = "ROMANTIC",

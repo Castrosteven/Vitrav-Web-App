@@ -1,7 +1,7 @@
 "use server";
 
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
-import { FormState } from ".";
+import { FormState } from "./page";
 
 const createNewItem = async ({
   afternoonActivities,

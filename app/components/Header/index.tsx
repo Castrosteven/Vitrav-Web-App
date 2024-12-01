@@ -53,7 +53,13 @@ export function Header() {
                 href="/create-custom"
                 className="text-sm font-medium text-muted-foreground hover:text-primary"
               >
-                Create New Itinerary
+                Create New Custom Itinerary
+              </Link>{" "}
+              <Link
+                href="/create"
+                className="text-sm font-medium text-muted-foreground hover:text-primary"
+              >
+                Create New Dynamic Itinerary
               </Link>
               {/* <Link
                 href="/projects"

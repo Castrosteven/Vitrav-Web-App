@@ -1,7 +1,7 @@
 "use server";
 
-import { timeOfDay } from "@/app/create-custom/page";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
+import { timeOfDay } from "./page";
 
 interface saveItineraryActionProps {
   title: string;

@@ -7,7 +7,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ItineraryTypeEnum } from "../CreateNewItemForm";
+
+export enum ItineraryTypeEnum {
+  ROMANTIC = "ROMANTIC",
+  ADVENTUROUS = "ADVENTUROUS",
+  FUN = "FUN",
+  CHILL = "CHILL",
+  CULTURAL = "CULTURAL",
+  NATURE = "NATURE",
+  ACTIVE = "ACTIVE",
+  INDULGENT = "INDULGENT",
+  FAMILY_FRIENDLY = "FAMILY_FRIENDLY",
+  SOLO = "SOLO",
+}
 
 interface ItineraryFormProps {
   title: string;
