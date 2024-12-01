@@ -2,21 +2,24 @@ import { useDrop } from "react-dnd";
 import { X } from "lucide-react";
 import PlaceItem from "../PlaceItem";
 import { useRef } from "react";
+import { timeOfDay } from "@/app/create-custom/page";
 
 interface ItinerarySectionProps {
-  places: {
-    [key: string]: google.maps.places.PlaceResult[];
-  };
-  addPlace: (place: google.maps.places.PlaceResult, timeOfDay: string) => void;
+  places: Record<timeOfDay, google.maps.places.PlaceResult[]>;
+  addPlace: (
+    place: google.maps.places.PlaceResult,
+    timeOfDay: timeOfDay
+  ) => void;
   removePlace: (
     place: google.maps.places.PlaceResult,
-    timeOfDay: string
+    timeOfDay: timeOfDay
   ) => void;
   movePlace: (
     place: google.maps.places.PlaceResult,
-    fromTime: string,
-    toTime: string
+    fromTime: timeOfDay,
+    toTime: timeOfDay
   ) => void;
+  removeFromSearchResults: (place: google.maps.places.PlaceResult) => void;
 }
 
 export default function ItinerarySection({
@@ -24,13 +27,14 @@ export default function ItinerarySection({
   addPlace,
   removePlace,
   movePlace,
+  removeFromSearchResults,
 }: ItinerarySectionProps) {
-  const timesOfDay = ["Morning", "Afternoon", "Evening"];
+  const timesOfDay: timeOfDay[] = ["Morning", "Afternoon", "Evening"];
 
   return (
     <div className="w-1/2 p-4">
       <h2 className="text-2xl font-bold mb-4">Itinerary</h2>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-rows-3 gap-4">
         {timesOfDay.map((timeOfDay) => (
           <ItineraryColumn
             key={timeOfDay}
@@ -39,6 +43,7 @@ export default function ItinerarySection({
             addPlace={addPlace}
             removePlace={removePlace}
             movePlace={movePlace}
+            removeFromSearchResults={removeFromSearchResults}
           />
         ))}
       </div>
@@ -47,18 +52,22 @@ export default function ItinerarySection({
 }
 
 interface ItineraryColumnProps {
-  timeOfDay: string;
+  timeOfDay: timeOfDay;
   places: google.maps.places.PlaceResult[];
-  addPlace: (place: google.maps.places.PlaceResult, timeOfDay: string) => void;
+  addPlace: (
+    place: google.maps.places.PlaceResult,
+    timeOfDay: timeOfDay
+  ) => void;
   removePlace: (
     place: google.maps.places.PlaceResult,
-    timeOfDay: string
+    timeOfDay: timeOfDay
   ) => void;
   movePlace: (
     place: google.maps.places.PlaceResult,
-    fromTime: string,
-    toTime: string
+    fromTime: timeOfDay,
+    toTime: timeOfDay
   ) => void;
+  removeFromSearchResults: (place: google.maps.places.PlaceResult) => void;
 }
 
 function ItineraryColumn({
@@ -67,6 +76,7 @@ function ItineraryColumn({
   addPlace,
   removePlace,
   movePlace,
+  removeFromSearchResults,
 }: ItineraryColumnProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -74,12 +84,13 @@ function ItineraryColumn({
     accept: "PLACE",
     drop: (item: {
       place: google.maps.places.PlaceResult;
-      fromTime?: string;
+      fromTime?: timeOfDay;
     }) => {
       if (item.fromTime && item.fromTime !== timeOfDay) {
         movePlace(item.place, item.fromTime, timeOfDay);
       } else if (!item.fromTime) {
         addPlace(item.place, timeOfDay);
+        removeFromSearchResults(item.place);
       }
     },
   }));

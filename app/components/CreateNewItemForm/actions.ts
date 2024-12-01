@@ -21,12 +21,18 @@ const createNewItem = async ({
     );
     // Here you would typically send the data to an API or perform some action
     const { errors, data: newItem } =
-      await cookieBasedClient.models.Item.create({
-        afternoonActivities,
-        eveningActivities,
+      await cookieBasedClient.models.Itenerary.create({
         itineraryTitle,
-        morningActivities,
         itineraryType,
+        location: {
+          lat: 123.123,
+          long: 123.123,
+        },
+        activities: {
+          morningActivities,
+          afternoonActivities,
+          eveningActivities,
+        },
       });
     if (errors) {
       throw new Error("Error creating new item: " + JSON.stringify(errors));

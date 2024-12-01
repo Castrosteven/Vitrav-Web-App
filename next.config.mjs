@@ -9,6 +9,9 @@ const nextConfig = {
       {
         hostname: "places.googleapis.com",
       },
+      {
+        hostname: "maps.googleapis.com",
+      },
     ],
   },
 };

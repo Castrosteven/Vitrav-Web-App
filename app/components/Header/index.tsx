@@ -50,7 +50,7 @@ export function Header() {
             </Link>
             <nav className="hidden md:ml-6 md:flex md:space-x-8">
               <Link
-                href="/create"
+                href="/create-custom"
                 className="text-sm font-medium text-muted-foreground hover:text-primary"
               >
                 Create New Itinerary

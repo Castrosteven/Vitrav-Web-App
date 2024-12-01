@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ItineraryTypeEnum } from "../CreateNewItemForm";
 
 interface ItineraryFormProps {
   title: string;
@@ -52,10 +53,11 @@ export default function ItineraryForm({
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="vacation">Vacation</SelectItem>
-            <SelectItem value="business">Business</SelectItem>
-            <SelectItem value="weekend">Weekend</SelectItem>
-            <SelectItem value="day-trip">Day Trip</SelectItem>
+            {Object.values(ItineraryTypeEnum).map((type) => (
+              <SelectItem key={type} value={type}>
+                {type.charAt(0) + type.slice(1).toLowerCase()}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

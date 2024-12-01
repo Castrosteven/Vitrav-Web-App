@@ -1,15 +1,24 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 import PlaceItem from "../PlaceItem";
+import { timeOfDay } from "@/app/create-custom/page";
 
-// interface SearchSectionProps {
-//   addPlace: (place: google.maps.places.PlaceResult, timeOfDay: string) => void;
-// }
+interface SearchSectionProps {
+  addPlace: (
+    place: google.maps.places.PlaceResult,
+    timeOfDay: timeOfDay
+  ) => void;
+  searchResults: google.maps.places.PlaceResult[];
+  setSearchResults: React.Dispatch<
+    React.SetStateAction<google.maps.places.PlaceResult[]>
+  >;
+  removeFromSearchResults: (place: google.maps.places.PlaceResult) => void;
+}
 
-export default function SearchSection() {
-  const [searchResults, setSearchResults] = useState<
-    google.maps.places.PlaceResult[]
-  >([]);
+export default function SearchSection({
+  searchResults,
+  setSearchResults,
+}: SearchSectionProps) {
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
@@ -32,10 +41,10 @@ export default function SearchSection() {
         <input
           type="text"
           placeholder="Search for places"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded mb-4"
         />
       </Autocomplete>
-      <div className="mt-4">
+      <div className="mt-4 space-y-4">
         {searchResults.map((place, index) => (
           <PlaceItem key={index} place={place} />
         ))}
