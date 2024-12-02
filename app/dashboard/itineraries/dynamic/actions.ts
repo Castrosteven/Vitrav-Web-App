@@ -1,15 +1,35 @@
 "use server";
 
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
-import { FormState } from "./page";
 
-const createNewItem = async ({
-  afternoonActivities,
-  eveningActivities,
-  itineraryTitle,
-  itineraryType,
-  morningActivities,
-}: FormState) => {
+enum ItineraryTypeEnum {
+  ROMANTIC = "ROMANTIC",
+  ADVENTUROUS = "ADVENTUROUS",
+  FUN = "FUN",
+  CHILL = "CHILL",
+  CULTURAL = "CULTURAL",
+  NATURE = "NATURE",
+  ACTIVE = "ACTIVE",
+  INDULGENT = "INDULGENT",
+  FAMILY_FRIENDLY = "FAMILY_FRIENDLY",
+  SOLO = "SOLO",
+}
+type FormState = {
+  itineraryType: ItineraryTypeEnum;
+  itineraryTitle: string;
+  morningActivities: string[];
+  afternoonActivities: string[];
+  eveningActivities: string[];
+};
+
+export const createNewItem = async (data: string) => {
+  const {
+    afternoonActivities,
+    eveningActivities,
+    itineraryTitle,
+    itineraryType,
+    morningActivities,
+  } = JSON.parse(data) as FormState;
   try {
     console.log(
       "Form DATA:",
@@ -20,28 +40,16 @@ const createNewItem = async ({
       morningActivities
     );
     // Here you would typically send the data to an API or perform some action
-    const { errors, data: newItem } =
-      await cookieBasedClient.models.Itenerary.create({
-        itineraryTitle,
-        itineraryType,
-        location: {
-          lat: 123.123,
-          long: 123.123,
-        },
-        activities: {
-          morningActivities,
-          afternoonActivities,
-          eveningActivities,
-        },
-      });
-    if (errors) {
-      throw new Error("Error creating new item: " + JSON.stringify(errors));
-    } else {
-      console.log("New item created:", newItem);
-    }
+    return await cookieBasedClient.models.DynamicItenerary.create({
+      itineraryTitle,
+      itineraryType,
+      activities: {
+        morningActivities,
+        afternoonActivities,
+        eveningActivities,
+      },
+    });
   } catch (error) {
     return error;
   }
 };
-
-export { createNewItem };

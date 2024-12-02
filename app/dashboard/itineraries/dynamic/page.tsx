@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import data from "../../../../../scrapper/data.json";
 import { createNewItem } from "./actions";
 
-export enum ItineraryTypeEnum {
+enum ItineraryTypeEnum {
   ROMANTIC = "ROMANTIC",
   ADVENTUROUS = "ADVENTUROUS",
   FUN = "FUN",
@@ -29,7 +29,7 @@ export enum ItineraryTypeEnum {
   SOLO = "SOLO",
 }
 
-export type FormState = {
+type FormState = {
   itineraryType: ItineraryTypeEnum;
   itineraryTitle: string;
   morningActivities: string[];
@@ -140,13 +140,18 @@ export default function ItineraryForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formState);
-    await createNewItem({
-      ...formState,
-      morningActivities: rightSections.RA.map((item) => item.name),
-      afternoonActivities: rightSections.RB.map((item) => item.name),
-      eveningActivities: rightSections.RC.map((item) => item.name),
-    });
+    try {
+      await createNewItem(
+        JSON.stringify({
+          ...formState,
+          morningActivities: rightSections.RA.map((item) => item.name),
+          afternoonActivities: rightSections.RB.map((item) => item.name),
+          eveningActivities: rightSections.RC.map((item) => item.name),
+        })
+      );
+    } catch (error) {
+      console.error("Error creating new item:", error);
+    }
   };
 
   const renderLeftSection = () => (

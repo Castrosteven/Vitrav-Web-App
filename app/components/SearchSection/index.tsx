@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 import PlaceItem from "../PlaceItem";
-import { timeOfDay } from "@/app/create-custom/page";
+import { timeOfDay } from "@/app/dashboard/itineraries/custom/page";
 
 interface SearchSectionProps {
   addPlace: (

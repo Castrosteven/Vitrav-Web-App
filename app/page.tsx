@@ -119,7 +119,7 @@ export default function VitravLandingPage() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">Download Vitrav</h3>
                 <p className="text-gray-500">
-                  Get the app from your device's app store.
+                  Get the app from your devices app store.
                 </p>
               </div>
               <div className="flex flex-col items-center text-center">
@@ -151,24 +151,22 @@ export default function VitravLandingPage() {
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               <div className="flex flex-col gap-4 p-6 bg-gray-100 rounded-lg">
                 <p className="text-gray-500">
-                  "Vitrav made planning our city break so easy and fun! We
-                  discovered amazing places we would have never found
-                  otherwise."
+                  Vitrav made planning our city break so easy and fun! We
+                  discovered amazing places we would have never found otherwise.
                 </p>
                 <p className="font-semibold">- Sarah T.</p>
               </div>
               <div className="flex flex-col gap-4 p-6 bg-gray-100 rounded-lg">
                 <p className="text-gray-500">
-                  "As a solo traveler, Vitrav has been a game-changer. I feel
-                  like I have a local guide in my pocket wherever I go."
+                  As a solo traveler, Vitrav has been a game-changer. I feel
+                  like I have a local guide in my pocket wherever I go.
                 </p>
                 <p className="font-semibold">- Mike R.</p>
               </div>
               <div className="flex flex-col gap-4 p-6 bg-gray-100 rounded-lg">
                 <p className="text-gray-500">
-                  "I love how easy it is to share my favorite spots with
-                  friends. Vitrav has made me the go-to person for city
-                  recommendations!"
+                  I love how easy it is to share my favorite spots with friends.
+                  Vitrav has made me the go-to person for city recommendations!
                 </p>
                 <p className="font-semibold">- Emily L.</p>
               </div>
