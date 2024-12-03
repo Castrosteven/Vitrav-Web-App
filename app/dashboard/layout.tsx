@@ -14,6 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
 import { usePathname } from "next/navigation";
 
 export default function Page({ children }: { children: React.ReactNode }) {

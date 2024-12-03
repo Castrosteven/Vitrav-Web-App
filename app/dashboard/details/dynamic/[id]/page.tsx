@@ -19,8 +19,8 @@ interface Activity {
 }
 
 interface ItineraryData {
-  itinerary_title: string;
-  itinerary_type: string;
+  itineraryTitle: string;
+  itineraryType: string;
   activities: {
     morning: Activity[];
     afternoon: Activity[];
@@ -54,13 +54,14 @@ export default async function Page({
       }
       const parsedData = JSON.parse(data as string) as ItineraryData[];
       const itineraryData = parsedData[0];
+      console.log(itineraryData);
       return (
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6 text-center">
-            {itineraryData.itinerary_title}
+            {itineraryData.itineraryTitle}
           </h1>
           <Badge className="mb-6 mx-auto block w-fit">
-            {itineraryData.itinerary_type}
+            {itineraryData.itineraryType}
           </Badge>
 
           <div className="grid gap-6 md:grid-cols-3">

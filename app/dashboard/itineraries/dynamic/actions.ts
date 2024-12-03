@@ -40,14 +40,13 @@ export const createNewItem = async (data: string) => {
       morningActivities
     );
     // Here you would typically send the data to an API or perform some action
-    return await cookieBasedClient.models.DynamicItenerary.create({
-      itineraryTitle,
-      itineraryType,
-      activities: {
-        morningActivities,
-        afternoonActivities,
-        eveningActivities,
-      },
+    return await cookieBasedClient.mutations.createNewItinierary({
+      morningActivities,
+      afternoonActivities,
+      eveningActivities,
+      itineraryTitle: itineraryTitle,
+      itineraryType: itineraryType,
+      isDynamic: true,
     });
   } catch (error) {
     return error;

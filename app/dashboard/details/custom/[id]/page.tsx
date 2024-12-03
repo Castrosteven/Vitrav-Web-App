@@ -2,55 +2,58 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
 import { ExternalLink, Sun, Cloud, Moon } from "lucide-react";
+
 import axios from "axios";
 import Image from "next/image";
 
 interface ActivitySectionProps {
-  activity: (string | number | boolean | object | unknown[] | null)[] | null;
   title: string;
   icon: React.ReactNode;
+  activities: (string | null)[];
 }
 
-const fetchPlacesDetailsById = async (placeId: string | undefined) => {
+const fetchPlacesDetailsById = async (placeId: string | null) => {
   if (!placeId) return;
+
   const { data } = await axios.get(
     `https://places.googleapis.com/v1/places/${placeId}`,
     {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-        "X-Goog-FieldMask": "*",
+        "X-Goog-FieldMask":
+          "displayName,formattedAddress,photos,nationalPhoneNumber,priceLevel,priceRange,rating",
       },
     }
   );
   return data;
 };
 
-const RenderActivity = async (place: google.maps.places.PlaceResult) => {
-  const detailData = await fetchPlacesDetailsById(place.place_id);
+const RenderActivity = async (place_id: string | null) => {
+  const place = await fetchPlacesDetailsById(place_id);
   return (
     <Card key={place.place_id} className="mb-4">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">{place.name}</CardTitle>
+        <CardTitle className="text-lg font-semibold">
+          {place.displayName.text}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <div>
               <dt className="text-sm font-medium text-gray-500">Address</dt>
-              <dd>
-                {place.formatted_address || place.vicinity || "Not available"}
-              </dd>
+              <dd>{place.formattedAddress}</dd>
             </div>
-            {place.formatted_phone_number && (
+            {place.nationalPhoneNumber && (
               <div>
                 <dt className="text-sm font-medium text-gray-500">Phone</dt>
                 <dd>
                   <a
-                    href={`tel:${place.formatted_phone_number}`}
+                    href={`tel:${place.nationalPhoneNumber}`}
                     className="text-blue-600 hover:underline"
                   >
-                    {place.formatted_phone_number}
+                    {place.nationalPhoneNumber}
                   </a>
                 </dd>
               </div>
@@ -71,23 +74,23 @@ const RenderActivity = async (place: google.maps.places.PlaceResult) => {
                 </dd>
               </div>
             )}
-            {place.price_level && (
+            {place.priceLevel && (
               <div>
                 <dt className="text-sm font-medium text-gray-500">
                   Price Level
                 </dt>
                 <dd>
                   <Badge variant="secondary">
-                    {"$".repeat(place.price_level)}
+                    {"$".repeat(place.priceLevel)}
                   </Badge>
                 </dd>
               </div>
             )}
           </div>
-          {detailData?.photos && (
+          {place?.photos && (
             <div className="flex justify-center items-center">
               <Image
-                src={`https://places.googleapis.com/v1/${detailData.photos[0].name}/media?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&maxHeightPx=200&maxWidthPx=200`}
+                src={`https://places.googleapis.com/v1/${place.photos[0].name}/media?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&maxHeightPx=200&maxWidthPx=200`}
                 alt={`Image of ${place.name}`}
                 width={200}
                 height={200}
@@ -102,14 +105,10 @@ const RenderActivity = async (place: google.maps.places.PlaceResult) => {
 };
 
 const ActivitiesListSection = async ({
-  activity,
   title,
   icon,
+  activities,
 }: ActivitySectionProps) => {
-  const listOfActivities = JSON.parse(
-    activity as unknown as string
-  ) as google.maps.places.PlaceResult[];
-
   return (
     <section className="mb-8">
       <h2 className="text-2xl font-bold mb-4 flex items-center">
@@ -119,7 +118,7 @@ const ActivitiesListSection = async ({
         </span>
       </h2>
       <div className="space-y-4">
-        {listOfActivities.map((activity) => RenderActivity(activity))}
+        {activities.map((place_id) => RenderActivity(place_id))}
       </div>
     </section>
   );
@@ -153,21 +152,21 @@ export default async function Page({
 
           {itinerary.activities.morningActivities && (
             <ActivitiesListSection
-              activity={itinerary.activities.morningActivities}
+              activities={itinerary.activities.morningActivities}
               title="Morning Activities"
               icon={<Sun className="w-6 h-6 text-yellow-500" />}
             />
           )}
           {itinerary.activities.afternoonActivities && (
             <ActivitiesListSection
-              activity={itinerary.activities.afternoonActivities}
+              activities={itinerary.activities.afternoonActivities}
               title="Afternoon Activities"
               icon={<Cloud className="w-6 h-6 text-blue-500" />}
             />
           )}
           {itinerary.activities.eveningActivities && (
             <ActivitiesListSection
-              activity={itinerary.activities.eveningActivities}
+              activities={itinerary.activities.eveningActivities}
               title="Evening Activities"
               icon={<Moon className="w-6 h-6 text-indigo-500" />}
             />

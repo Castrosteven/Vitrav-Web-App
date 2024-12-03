@@ -16,18 +16,17 @@ export async function saveItineraryAction(string: string) {
   console.log("Saving itinerary:", { title, category, places });
 
   try {
-    return await cookieBasedClient.models.Itenerary.create({
-      activities: {
-        morningActivities: [JSON.stringify(places.Morning)],
-        afternoonActivities: [JSON.stringify(places.Afternoon)],
-        eveningActivities: [JSON.stringify(places.Evening)],
-      },
+    return await cookieBasedClient.mutations.createNewItinierary({
+      morningActivities:
+        places.Morning && places.Morning.map((place) => place.place_id!),
+
+      afternoonActivities:
+        places.Morning && places.Afternoon.map((place) => place.place_id!),
+      eveningActivities:
+        places.Morning && places.Evening.map((place) => place.place_id!),
       itineraryTitle: title,
-      location: {
-        lat: 123.123,
-        long: 123.123,
-      },
       itineraryType: category,
+      isDynamic: false,
     });
   } catch (error) {
     throw new Error("Error creating new item: " + JSON.stringify(error));
