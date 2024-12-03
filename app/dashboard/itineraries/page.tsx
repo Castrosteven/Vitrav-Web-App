@@ -139,7 +139,6 @@ const DyanmicItineraryCard = (itinerary: Schema["Itenerary"]["type"]) => {
 
 export default async function ItineraryCardList() {
   const { data: Itineraries } = await cookieBasedClient.models.Itenerary.list();
-
   return (
     <div className="container mx-auto">
       <LocationInput />

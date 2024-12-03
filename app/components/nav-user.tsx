@@ -36,7 +36,6 @@ export function NavUser() {
       fetchUserAttributes().then(setUserAttributes);
     }
   }, [user]);
-  console.log(userAttributes);
 
   return (
     <>
