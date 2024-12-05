@@ -26,10 +26,22 @@ export default function LocationInput() {
     []
   );
 
-  const onPlaceChanged = () => {
+  const onPlaceChanged = async () => {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace();
+      console.log("Place changed:", place);
       setLocation(place.formatted_address || "");
+      if (!place.geometry) return;
+      if (!place.geometry.location) return;
+      const location = {
+        coords: {
+          latitude: place.geometry.location.lat() || 1,
+          longitude: place.geometry.location.lng() || 1,
+        },
+      } as GeolocationPosition;
+
+      await setLocationInCookies(location);
+      console.log("Location set in cookies:", location);
     }
   };
 
