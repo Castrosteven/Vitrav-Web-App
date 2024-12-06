@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Schema } from "@/backend/amplify/data/resource";
 import { useRouter } from "next/navigation";
+import { StorageImage } from "@aws-amplify/ui-react-storage";
 
 interface Itinerary {
   id: string;
@@ -35,10 +36,11 @@ interface Itinerary {
   people: number;
   price: number;
   isDynamic: boolean;
+  itineraryType: string;
 }
 
 interface ItineraryTableProps {
-  itineraries: Schema["Itenerary"]["type"][];
+  itineraries: Schema["Itinerary"]["type"][];
 }
 
 export default function ItineraryTable({ itineraries }: ItineraryTableProps) {
@@ -55,6 +57,7 @@ export default function ItineraryTable({ itineraries }: ItineraryTableProps) {
       people: 3,
       price: 2,
       isDynamic: itinerary.isDynamic,
+      itineraryType: itinerary.itineraryType,
     };
   });
 
@@ -62,15 +65,25 @@ export default function ItineraryTable({ itineraries }: ItineraryTableProps) {
     {
       accessorKey: "image",
       header: "Image",
-      cell: ({ row }) => (
-        <Image
-          src={row.original.image}
-          alt={row.original.title}
-          width={100}
-          height={100}
-          className="rounded-md object-cover"
-        />
-      ),
+      cell: ({ row }) => {
+        return row.original.isDynamic ? (
+          <StorageImage
+            alt="cat"
+            path={`dynamic_pictures/${row.original.itineraryType}.webp`}
+            width={100}
+            height={100}
+            className="rounded-md object-cover"
+          />
+        ) : (
+          <Image
+            src={row.original.image}
+            alt={row.original.title}
+            width={100}
+            height={100}
+            className="rounded-md object-cover"
+          />
+        );
+      },
     },
     {
       accessorKey: "title",

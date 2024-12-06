@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface ItineraryItem {
   id: string;
   title: string;
@@ -6,6 +8,7 @@ export interface ItineraryItem {
   image: string;
   place: string;
   time: string;
+  duration: string;
   date: string;
   location: string;
   reviews: number;
@@ -35,4 +38,16 @@ export interface DayItinerary {
   planner: PlannerInfo;
   reviews: ItineraryReview[];
   completions: number;
+}
+
+// export interface DayItinerary {
+//   id: string;
+//   title: string;
+//   date: string;
+//   items: ItineraryItem[];
+// }
+
+export interface ItineraryContextType {
+  itinerary: DayItinerary;
+  setItinerary: Dispatch<SetStateAction<DayItinerary>>;
 }

@@ -11,6 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SearchFilters } from "../../types/search";
+import { generateClient } from "aws-amplify/data";
+import { Schema } from "@/backend/amplify/data/resource";
 
 export function SearchSection() {
   const [filters, setFilters] = useState<SearchFilters>({
@@ -19,10 +21,18 @@ export function SearchSection() {
     category: "",
     people: "",
   });
-
-  const handleSearch = (e: React.FormEvent) => {
+  const client = generateClient<Schema>();
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Search with filters:", filters);
+    const { data, errors } = await client.queries.searchForItineraries({
+      ...filters,
+    });
+    if (errors) {
+      console.error(errors);
+      return;
+    }
+    console.log(data);
     // Here you would typically call an API or update the page with search results
   };
 

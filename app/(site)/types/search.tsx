@@ -13,4 +13,5 @@ export interface PopularItinerary {
   rating: number;
   reviews: number;
   image: string;
+  isDynamic: boolean;
 }

@@ -1,180 +1,120 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { HeroSection } from "@/app/(site)/components/EventDetailPage/HeroSection";
+import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/ItineraryReviews";
+import { PlannerInfo } from "@/app/(site)/components/EventDetailPage/plannerInfo";
+import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
+import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
+// import { mockItinerary } from "@/app/mockItinerary";
+import { DayItinerary as DayItineraryType } from "@/app/types/itinerary";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
-import { ExternalLink, Sun, Cloud, Moon } from "lucide-react";
 
-import axios from "axios";
-import Image from "next/image";
-
-interface ActivitySectionProps {
-  title: string;
-  icon: React.ReactNode;
-  activities: (string | null)[];
-}
-
-const fetchPlacesDetailsById = async (placeId: string | null) => {
-  if (!placeId) return;
-
-  const { data } = await axios.get(
-    `https://places.googleapis.com/v1/places/${placeId}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-        "X-Goog-FieldMask":
-          "displayName,formattedAddress,photos,nationalPhoneNumber,priceLevel,priceRange,rating",
-      },
-    }
-  );
-  return data;
-};
-
-const RenderActivity = async (place_id: string | null) => {
-  const place = await fetchPlacesDetailsById(place_id);
-  return (
-    <Card key={place.place_id} className="mb-4">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          {place.displayName.text}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <div>
-              <dt className="text-sm font-medium text-gray-500">Address</dt>
-              <dd>{place.formattedAddress}</dd>
-            </div>
-            {place.nationalPhoneNumber && (
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Phone</dt>
-                <dd>
-                  <a
-                    href={`tel:${place.nationalPhoneNumber}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {place.nationalPhoneNumber}
-                  </a>
-                </dd>
-              </div>
-            )}
-            {place.website && (
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Website</dt>
-                <dd>
-                  <a
-                    href={place.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 flex items-center hover:underline"
-                  >
-                    {new URL(place.website).hostname}
-                    <ExternalLink className="ml-1 h-4 w-4" />
-                  </a>
-                </dd>
-              </div>
-            )}
-            {place.priceLevel && (
-              <div>
-                <dt className="text-sm font-medium text-gray-500">
-                  Price Level
-                </dt>
-                <dd>
-                  <Badge variant="secondary">
-                    {"$".repeat(place.priceLevel)}
-                  </Badge>
-                </dd>
-              </div>
-            )}
-          </div>
-          {place?.photos && (
-            <div className="flex justify-center items-center">
-              <Image
-                src={`https://places.googleapis.com/v1/${place.photos[0].name}/media?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&maxHeightPx=200&maxWidthPx=200`}
-                alt={`Image of ${place.name}`}
-                width={200}
-                height={200}
-                className="rounded-lg object-cover"
-              />
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-const ActivitiesListSection = async ({
-  title,
-  icon,
-  activities,
-}: ActivitySectionProps) => {
-  return (
-    <section className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 flex items-center">
-        {icon}
-        <span className="ml-2">
-          {title} {}{" "}
-        </span>
-      </h2>
-      <div className="space-y-4">
-        {activities.map((place_id) => RenderActivity(place_id))}
-      </div>
-    </section>
-  );
-};
-
-export default async function Page({
+export default async function DayItinerary({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const id = (await params).id;
-  try {
-    const { data: itinerary, errors } =
-      await cookieBasedClient.models.Itenerary.get({ id });
 
-    if (errors) {
-      return (
-        <div className="container mx-auto p-4">Error Generating Itinerary</div>
-      );
-    }
-
-    if (itinerary) {
-      return (
-        <div className="container mx-auto p-4">
-          <h1 className="text-3xl font-bold mb-6">
-            {itinerary.itineraryTitle}
-          </h1>
-          <p className="text-xl mb-8">
-            Activity Type: {itinerary.itineraryType}
-          </p>
-
-          {itinerary.activities.morningActivities && (
-            <ActivitiesListSection
-              activities={itinerary.activities.morningActivities}
-              title="Morning Activities"
-              icon={<Sun className="w-6 h-6 text-yellow-500" />}
-            />
-          )}
-          {itinerary.activities.afternoonActivities && (
-            <ActivitiesListSection
-              activities={itinerary.activities.afternoonActivities}
-              title="Afternoon Activities"
-              icon={<Cloud className="w-6 h-6 text-blue-500" />}
-            />
-          )}
-          {itinerary.activities.eveningActivities && (
-            <ActivitiesListSection
-              activities={itinerary.activities.eveningActivities}
-              title="Evening Activities"
-              icon={<Moon className="w-6 h-6 text-indigo-500" />}
-            />
-          )}
-        </div>
-      );
-    }
-  } catch (error) {
-    throw new Error(`error: ${error}`);
+  const { data, errors } =
+    await cookieBasedClient.queries.generateDynamicActivitiesFromItinerary({
+      dynamicItineraryId: id,
+    });
+  if (errors || !data) {
+    console.log(errors);
+    throw new Error("Failed to fetch data");
   }
+  const formattedMorning = (): DayItineraryType["items"] => {
+    const morningActivities =
+      data.activities && data.activities.morningActivities;
+
+    const cleaned =
+      morningActivities &&
+      morningActivities.map((i) => {
+        const imageUrl =
+          i &&
+          i.photos &&
+          `https://places.googleapis.com/v1/${i.photos[0]?.name}/media?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&maxHeightPx=400&maxWidthPx=400`;
+        return {
+          date: "UIT", //remove
+          duration: "1h",
+          id: i?.id || "1",
+          image:
+            imageUrl || "https://source.unsplash.com/1600x900/?nature,water",
+          location: "New York",
+          longDescription: "This is a long description",
+          place: i?.formattedAddress || "New York",
+          rating: 4.5,
+          reviews: 100,
+          shortDescription:
+            i?.editorialSummary?.text ||
+            i?.generativeSummary?.description?.text ||
+            "Short description Here",
+          time: "10:00",
+          title: i?.displayName?.text || "Central Park",
+        };
+      });
+
+    return (
+      cleaned || [
+        {
+          date: "2022-01-01",
+          duration: "1h",
+          id: "1",
+          image: "https://source.unsplash.com/1600x900/?nature,water",
+          location: "New York",
+          longDescription: "This is a long description",
+          place: "New York",
+          rating: 4.5,
+          reviews: 100,
+          shortDescription: "",
+          time: "10:00",
+          title: "Central Park",
+        },
+      ]
+    );
+  };
+
+  const mockItinerary: DayItineraryType = {
+    completions: 100,
+    date: "2022-01-01",
+    items: formattedMorning(),
+    planner: {
+      avatar: "https://source.unsplash.com/1600x900/?nature,water",
+      name: "John Doe",
+      bio: "This is a bio",
+      eventsCreated: 100,
+      profileLink: "/profile",
+    },
+    id: "1",
+    reviews: [
+      {
+        comment: "This is a great itinerary",
+        rating: 4.5,
+        id: "1",
+        user: "John Doe",
+      },
+    ],
+    title: data.itineraryTitle,
+  };
+  return (
+    <div>
+      <HeroSection
+        title={mockItinerary.title}
+        date={mockItinerary.date}
+        completions={mockItinerary.completions}
+      />
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid gap-8 md:grid-cols-3">
+          <div className="md:col-span-2 space-y-6">
+            <h2 className="text-2xl font-bold mb-4">Itinerary Timeline</h2>
+            <Timeline items={mockItinerary.items} />
+          </div>
+          <div className="space-y-6">
+            <PlannerInfo planner={mockItinerary.planner} />
+            <ItineraryReviews reviews={mockItinerary.reviews} />
+            <UserActions />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

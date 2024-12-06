@@ -92,6 +92,7 @@ export default function Home() {
           googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
           libraries={["places"]}
           version="weekly"
+          // channel="beta"
         >
           <main className="flex flex-col  p-4">
             <ItineraryForm
