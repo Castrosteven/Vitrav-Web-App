@@ -1,3 +1,5 @@
+import LocationInput from "@/app/components/location-input";
+import { Schema } from "@/backend/amplify/data/resource";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -7,19 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-export enum ItineraryTypeEnum {
-  ROMANTIC = "ROMANTIC",
-  ADVENTUROUS = "ADVENTUROUS",
-  FUN = "FUN",
-  CHILL = "CHILL",
-  CULTURAL = "CULTURAL",
-  NATURE = "NATURE",
-  ACTIVE = "ACTIVE",
-  INDULGENT = "INDULGENT",
-  FAMILY_FRIENDLY = "FAMILY_FRIENDLY",
-  SOLO = "SOLO",
-}
+import { generateClient } from "aws-amplify/api";
+import { Dispatch, SetStateAction } from "react";
 
 interface ItineraryFormProps {
   title: string;
@@ -27,6 +18,8 @@ interface ItineraryFormProps {
   category: string;
   setCategory: (category: string) => void;
   onSave: () => void;
+  setLocation: Dispatch<Schema["ILatLng"]["type"]>;
+  setNumberOfPeople: Dispatch<SetStateAction<number>>;
 }
 
 export default function ItineraryForm({
@@ -35,7 +28,11 @@ export default function ItineraryForm({
   category,
   setCategory,
   onSave,
+  setLocation,
+  setNumberOfPeople,
 }: ItineraryFormProps) {
+  const client = generateClient<Schema>();
+  const ItineraryTypeEnum = client.enums.ItineraryType.values();
   return (
     <div className="flex items-end space-x-4">
       <div className="flex-1">
@@ -53,6 +50,7 @@ export default function ItineraryForm({
           placeholder="Enter itinerary title"
         />
       </div>
+
       <div className="w-48">
         <label
           htmlFor="category"
@@ -72,6 +70,23 @@ export default function ItineraryForm({
             ))}
           </SelectContent>
         </Select>
+      </div>
+      <div className="">
+        <LocationInput setGeoLocation={setLocation} />
+      </div>
+      <div>
+        <label
+          htmlFor="numberOfPeople"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Number of People
+        </label>
+        <Input
+          type="number"
+          id="numberOfPeople"
+          onChange={(e) => setNumberOfPeople(parseInt(e.target.value))}
+          placeholder="Enter number of people"
+        />
       </div>
       <Button onClick={onSave}>Save Itinerary</Button>
     </div>

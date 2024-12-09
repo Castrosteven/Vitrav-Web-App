@@ -1,5 +1,5 @@
 export interface SearchFilters {
-  location: string;
+  location: google.maps.places.PlaceGeometry | undefined;
   price: string;
   category: string;
   people: string;

@@ -3,7 +3,6 @@ import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/Itiner
 import { PlannerInfo } from "@/app/(site)/components/EventDetailPage/plannerInfo";
 import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
 import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
-// import { mockItinerary } from "@/app/mockItinerary";
 import { DayItinerary as DayItineraryType } from "@/app/types/itinerary";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
 

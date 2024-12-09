@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -13,10 +12,20 @@ import {
 import { SearchFilters } from "../../types/search";
 import { generateClient } from "aws-amplify/data";
 import { Schema } from "@/backend/amplify/data/resource";
+import SearchLocation from "../SearchLocation";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { setLocationInCookies } from "@/app/components/location-input/actions";
 
 export function SearchSection() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const { replace } = useRouter();
+
+  const [searchResults, setSearchResults] =
+    useState<google.maps.places.PlaceResult>();
   const [filters, setFilters] = useState<SearchFilters>({
-    location: "",
+    location: searchResults && searchResults.geometry,
     price: "",
     category: "",
     people: "",
@@ -24,9 +33,43 @@ export function SearchSection() {
   const client = generateClient<Schema>();
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+    if (searchResults?.geometry?.location) {
+      await setLocationInCookies({
+        coords: {
+          latitude: searchResults.geometry.location.lat(),
+          longitude: searchResults.geometry.location.lng(),
+        },
+      } as GeolocationPosition);
+      console.log("Location set in cookies:", location);
+      params.set(
+        "latitude",
+        searchResults?.geometry?.location?.lat().toString()
+      );
+      params.set(
+        "longitude",
+        searchResults?.geometry?.location?.lng().toString()
+      );
+    }
+    if (filters.price) {
+      params.set("price", filters.price);
+    }
+    if (filters.category) {
+      params.set("category", filters.category);
+    }
+    if (filters.people) {
+      params.set("people", filters.people);
+    }
+    replace(`${pathname}?${params.toString()}`);
+
     console.log("Search with filters:", filters);
     const { data, errors } = await client.queries.searchForItineraries({
-      ...filters,
+      category: filters.category,
+      latitude: searchResults?.geometry?.location?.lat(),
+      longitude: searchResults?.geometry?.location?.lng(),
+      people: filters.people,
+      price: filters.price,
     });
     if (errors) {
       console.error(errors);
@@ -36,54 +79,65 @@ export function SearchSection() {
     // Here you would typically call an API or update the page with search results
   };
 
+  const categoryTypes = client.enums.ItineraryType.values();
+  const priceLevels = client.enums.PriceLevel.values();
+  const numberOfPeople = client.enums.NumberOfPeople.values();
   return (
     <div className="w-full max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-lg">
       <form onSubmit={handleSearch} className="space-y-4">
-        <Input
-          type="text"
-          placeholder="Search destinations..."
-          className="w-full"
-          value={filters.location}
-          onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-        />
+        <SearchLocation setSearchResults={setSearchResults} />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Select
             onValueChange={(value) => setFilters({ ...filters, price: value })}
+            defaultValue={searchParams.get("price")?.toString()}
           >
             <SelectTrigger>
               <SelectValue placeholder="Price range" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="budget">Budget</SelectItem>
-              <SelectItem value="mid-range">Mid-range</SelectItem>
-              <SelectItem value="luxury">Luxury</SelectItem>
+              {priceLevels.map((p) => {
+                return (
+                  <SelectItem key={p} value={p}>
+                    {p}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
           <Select
             onValueChange={(value) =>
               setFilters({ ...filters, category: value })
             }
+            defaultValue={searchParams.get("category")?.toString()}
           >
             <SelectTrigger>
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="adventure">Adventure</SelectItem>
-              <SelectItem value="culture">Culture</SelectItem>
-              <SelectItem value="relaxation">Relaxation</SelectItem>
+              {categoryTypes.map((categoryType) => {
+                return (
+                  <SelectItem key={categoryType} value={categoryType}>
+                    {categoryType}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
           <Select
             onValueChange={(value) => setFilters({ ...filters, people: value })}
+            defaultValue={searchParams.get("people")?.toString()}
           >
             <SelectTrigger>
               <SelectValue placeholder="Number of people" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">1 person</SelectItem>
-              <SelectItem value="2">2 people</SelectItem>
-              <SelectItem value="3-5">3-5 people</SelectItem>
-              <SelectItem value="6+">6+ people</SelectItem>
+              {numberOfPeople.map((p) => {
+                return (
+                  <SelectItem key={p} value={p}>
+                    {p}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         </div>

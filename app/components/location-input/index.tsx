@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, Dispatch } from "react";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MapPin, Loader2 } from "lucide-react";
 import { setLocationInCookies } from "./actions";
+import { Schema } from "@/backend/amplify/data/resource";
 
 const libraries = ["places"];
 
-export default function LocationInput() {
+interface LocationInputProps {
+  setGeoLocation: Dispatch<Schema["ILatLng"]["type"]>;
+}
+export default function LocationInput({ setGeoLocation }: LocationInputProps) {
   const [location, setLocation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -39,7 +43,10 @@ export default function LocationInput() {
           longitude: place.geometry.location.lng() || 1,
         },
       } as GeolocationPosition;
-
+      setGeoLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
       await setLocationInCookies(location);
       console.log("Location set in cookies:", location);
     }
@@ -52,6 +59,10 @@ export default function LocationInput() {
         async (position) => {
           const { latitude, longitude } = position.coords;
           try {
+            setGeoLocation({
+              latitude,
+              longitude,
+            });
             await setLocationInCookies(position);
             const response = await fetch(
               `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`

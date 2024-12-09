@@ -5,9 +5,49 @@ import { AppPromo } from "./components/LandingPge/AppPromo";
 import Link from "next/link";
 import cookieBasedClient from "../utils/cookieBasedClient";
 
-export default async function VitravLandingPage() {
+interface SearchParams {
+  latitude: string;
+  longitude: string;
+  category: string;
+  price: string;
+  people: string;
+}
+
+interface FilterParams {
+  priceRange: {
+    eq: string;
+  };
+  numberOfPeople: {
+    eq: string;
+  };
+}
+export default async function VitravLandingPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const filters = await searchParams;
+  console.log(filters);
+  const appliedFilters: Record<
+    keyof FilterParams,
+    {
+      eq: string;
+    }
+  > = {} as FilterParams;
+
+  if (filters.price) {
+    Object.assign(appliedFilters, {
+      priceRange: { eq: filters.price },
+    });
+  }
+  if (filters.people) {
+    Object.assign(appliedFilters, {
+      numberOfPeople: { eq: filters.people },
+    });
+  }
+
   const { data, errors } = await cookieBasedClient.models.Itinerary.list({
-    limit: 10,
+    filter: appliedFilters,
   });
   if (errors) {
     throw new Error(errors[0].message);

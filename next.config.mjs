@@ -12,6 +12,9 @@ const nextConfig = {
       {
         hostname: "maps.googleapis.com",
       },
+      {
+        hostname: "source.unsplash.com",
+      },
     ],
   },
 };

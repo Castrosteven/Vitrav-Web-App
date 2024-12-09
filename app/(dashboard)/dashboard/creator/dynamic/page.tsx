@@ -15,22 +15,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import data from "../../../../../../scrapper/data.json";
 import { createNewItem } from "./actions";
-
-enum ItineraryTypeEnum {
-  ROMANTIC = "ROMANTIC",
-  ADVENTUROUS = "ADVENTUROUS",
-  FUN = "FUN",
-  CHILL = "CHILL",
-  CULTURAL = "CULTURAL",
-  NATURE = "NATURE",
-  ACTIVE = "ACTIVE",
-  INDULGENT = "INDULGENT",
-  FAMILY_FRIENDLY = "FAMILY_FRIENDLY",
-  SOLO = "SOLO",
-}
+import LocationInput from "@/app/components/location-input";
+import { Schema } from "@/backend/amplify/data/resource";
+import { generateClient } from "aws-amplify/api";
 
 type FormState = {
-  itineraryType: ItineraryTypeEnum;
+  itineraryType: string;
   itineraryTitle: string;
   morningActivities: string[];
   afternoonActivities: string[];
@@ -39,13 +29,15 @@ type FormState = {
 
 export default function ItineraryForm() {
   const [formState, setFormState] = useState<FormState>({
-    itineraryType: ItineraryTypeEnum.FUN,
+    itineraryType: "",
     itineraryTitle: "",
     morningActivities: [],
     afternoonActivities: [],
     eveningActivities: [],
   });
-
+  const [location, setLocation] = useState<Schema["ILatLng"]["type"]>();
+  const client = generateClient<Schema>();
+  const ItineraryTypeEnum = client.enums.ItineraryType.values();
   type Section = "RA" | "RB" | "RC";
 
   interface Item {
@@ -147,6 +139,7 @@ export default function ItineraryForm() {
           morningActivities: rightSections.RA.map((item) => item.name),
           afternoonActivities: rightSections.RB.map((item) => item.name),
           eveningActivities: rightSections.RC.map((item) => item.name),
+          location: location,
         })
       );
     } catch (error) {
@@ -247,6 +240,9 @@ export default function ItineraryForm() {
                 }
                 required
               />
+            </div>
+            <div className="space-y-2">
+              <LocationInput setGeoLocation={setLocation} />
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-start space-y-4 md:space-y-0 md:space-x-4">

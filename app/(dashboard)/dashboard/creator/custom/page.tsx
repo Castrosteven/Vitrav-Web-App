@@ -9,10 +9,13 @@ import ItinerarySection from "@/app/(dashboard)/components/creator/ItinerarySect
 import ItineraryForm from "@/app/(dashboard)/components/creator/ItineraryForm";
 import { saveItineraryAction } from "./actions";
 import { Card } from "@/app/components/ui/card";
+import { Schema } from "@/backend/amplify/data/resource";
 
 export type timeOfDay = "Morning" | "Afternoon" | "Evening";
 
 export default function Home() {
+  const [location, setLocation] = useState<Schema["ILatLng"]["type"]>();
+  const [numberOfpeople, setNumberOfPeople] = useState(0);
   const [places, setPlaces] = useState<
     Record<timeOfDay, google.maps.places.PlaceResult[]>
   >({
@@ -71,6 +74,8 @@ export default function Home() {
           category,
           places,
           title,
+          location,
+          numberOfpeople,
         })
       );
       console.log("Itinerary saved:", newItenerary);
@@ -101,6 +106,8 @@ export default function Home() {
               category={category}
               setCategory={setCategory}
               onSave={saveItinerary}
+              setLocation={setLocation}
+              setNumberOfPeople={setNumberOfPeople}
             />
             <div className="flex flex-1 mt-4">
               <SearchSection

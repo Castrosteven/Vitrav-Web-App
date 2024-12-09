@@ -1,25 +1,15 @@
 "use server";
 
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
+import { Schema } from "@/backend/amplify/data/resource";
 
-enum ItineraryTypeEnum {
-  ROMANTIC = "ROMANTIC",
-  ADVENTUROUS = "ADVENTUROUS",
-  FUN = "FUN",
-  CHILL = "CHILL",
-  CULTURAL = "CULTURAL",
-  NATURE = "NATURE",
-  ACTIVE = "ACTIVE",
-  INDULGENT = "INDULGENT",
-  FAMILY_FRIENDLY = "FAMILY_FRIENDLY",
-  SOLO = "SOLO",
-}
 type FormState = {
-  itineraryType: ItineraryTypeEnum;
+  itineraryType: string;
   itineraryTitle: string;
   morningActivities: string[];
   afternoonActivities: string[];
   eveningActivities: string[];
+  location: Schema["ILatLng"]["type"];
 };
 
 export const createNewItem = async (data: string) => {
@@ -29,6 +19,7 @@ export const createNewItem = async (data: string) => {
     itineraryTitle,
     itineraryType,
     morningActivities,
+    location,
   } = JSON.parse(data) as FormState;
   try {
     console.log(
@@ -47,6 +38,8 @@ export const createNewItem = async (data: string) => {
       itineraryTitle: itineraryTitle,
       itineraryType: itineraryType,
       isDynamic: true,
+      lat: location.latitude,
+      long: location.longitude,
     });
   } catch (error) {
     return error;
