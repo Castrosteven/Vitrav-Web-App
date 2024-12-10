@@ -9,49 +9,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchFilters } from "../../types/search";
 import { generateClient } from "aws-amplify/data";
 import { Schema } from "@/backend/amplify/data/resource";
 import SearchLocation from "../SearchLocation";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { setLocationInCookies } from "@/app/components/location-input/actions";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export function SearchSection() {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
-  const { replace } = useRouter();
-
-  const [searchResults, setSearchResults] =
-    useState<google.maps.places.PlaceResult>();
-  const [filters, setFilters] = useState<SearchFilters>({
-    location: searchResults && searchResults.geometry,
+  const { push } = useRouter();
+  const [filters, setFilters] = useState<{
+    price: string;
+    category: string;
+    people: string;
+    place: string;
+  }>({
     price: "",
     category: "",
     people: "",
+    place: "",
   });
   const client = generateClient<Schema>();
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const params = new URLSearchParams(searchParams);
-    if (searchResults?.geometry?.location) {
-      await setLocationInCookies({
-        coords: {
-          latitude: searchResults.geometry.location.lat(),
-          longitude: searchResults.geometry.location.lng(),
-        },
-      } as GeolocationPosition);
-      console.log("Location set in cookies:", location);
-      params.set(
-        "latitude",
-        searchResults?.geometry?.location?.lat().toString()
-      );
-      params.set(
-        "longitude",
-        searchResults?.geometry?.location?.lng().toString()
-      );
-    }
     if (filters.price) {
       params.set("price", filters.price);
     }
@@ -61,22 +43,7 @@ export function SearchSection() {
     if (filters.people) {
       params.set("people", filters.people);
     }
-    replace(`${pathname}?${params.toString()}`);
-
-    console.log("Search with filters:", filters);
-    const { data, errors } = await client.queries.searchForItineraries({
-      category: filters.category,
-      latitude: searchResults?.geometry?.location?.lat(),
-      longitude: searchResults?.geometry?.location?.lng(),
-      people: filters.people,
-      price: filters.price,
-    });
-    if (errors) {
-      console.error(errors);
-      return;
-    }
-    console.log(data);
-    // Here you would typically call an API or update the page with search results
+    push("/results?" + params.toString());
   };
 
   const categoryTypes = client.enums.ItineraryType.values();
@@ -85,7 +52,7 @@ export function SearchSection() {
   return (
     <div className="w-full max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-lg">
       <form onSubmit={handleSearch} className="space-y-4">
-        <SearchLocation setSearchResults={setSearchResults} />
+        <SearchLocation />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Select
             onValueChange={(value) => setFilters({ ...filters, price: value })}

@@ -1,25 +1,30 @@
+"use client";
 import { Input } from "@/app/components/ui/input";
 import { Autocomplete, LoadScript } from "@react-google-maps/api";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 
-interface SearchSectionProps {
-  setSearchResults: React.Dispatch<
-    React.SetStateAction<google.maps.places.PlaceResult | undefined>
-  >;
-}
-const SearchLocation = ({ setSearchResults }: SearchSectionProps) => {
+const SearchLocation = () => {
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
     autocompleteRef.current = autocomplete;
   };
   const searchParams = useSearchParams();
-
-  const onPlaceChanged = () => {
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const onPlaceChanged = async () => {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace();
-      if (place.geometry && place.name) {
-        setSearchResults(place);
+      if (place) {
+        const params = new URLSearchParams(searchParams);
+        if (place.geometry?.location) {
+          params.set("latitude", place.geometry?.location?.lat().toString());
+          params.set("longitude", place.geometry?.location?.lng().toString());
+          if (place.formatted_address) {
+            params.set("place", place.formatted_address);
+          }
+          replace(`${pathname}?${params.toString()}`);
+        }
       }
     }
   };

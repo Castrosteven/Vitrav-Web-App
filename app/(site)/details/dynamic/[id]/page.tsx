@@ -5,30 +5,27 @@ import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
 import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
 import { mockItinerary } from "@/app/mockItinerary";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
-import { cookies } from "next/headers";
 import { Suspense } from "react";
 export default async function DayItinerary({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ latitude: string; longitude: string; place: string }>;
 }) {
-  const id = (await params).id;
-  const cookieStore = await cookies();
-  const position = cookieStore.get("position");
-  console.log("Position:", position?.value);
-  if (!position) {
-    console.error("No location found in cookies");
-    throw new Error("No location found in cookies");
-  }
+  const { id } = await params;
+  const { latitude, longitude } = await searchParams;
 
-  const { coords } = JSON.parse(position.value) as GeolocationPosition;
+  if (!latitude || !longitude) {
+    console.error("No geometry found in location");
+    throw new Error("No geometry found in location");
+  }
   const { data, errors } =
     await cookieBasedClient.queries.generateDynamicActivitiesFromItinerary({
       dynamicItineraryId: id,
-      lat: coords.latitude,
-      long: coords.longitude,
+      lat: parseFloat(latitude),
+      long: parseFloat(longitude),
     });
-  console.log(`data`, JSON.stringify(data));
   if (errors || !data) {
     console.log(errors);
     throw new Error("Failed to fetch data");
