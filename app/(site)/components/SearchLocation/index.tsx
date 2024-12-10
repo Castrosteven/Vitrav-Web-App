@@ -37,12 +37,12 @@ const SearchLocation = () => {
       <Autocomplete
         onLoad={onLoad}
         onPlaceChanged={onPlaceChanged}
-        options={{ types: ["(cities)"] }}
+        // options={{ types: ["(cities)"] }}
       >
         <Input
           type="text"
           placeholder="Where are you going?"
-          className="w-full"
+          className="w-full border "
           defaultValue={searchParams.get("query")?.toString()}
         />
       </Autocomplete>

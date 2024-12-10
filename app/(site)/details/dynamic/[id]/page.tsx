@@ -3,6 +3,7 @@ import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/Itiner
 import { PlannerInfo } from "@/app/(site)/components/EventDetailPage/plannerInfo";
 import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
 import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
+import GoogleMapsPlaces from "@/app/(site)/components/Map";
 import { mockItinerary } from "@/app/mockItinerary";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
 import { Suspense } from "react";
@@ -31,6 +32,16 @@ export default async function DayItinerary({
     throw new Error("Failed to fetch data");
   }
 
+  const places = data.activities.map((act) => {
+    if (act) {
+      return {
+        id: act.id || "",
+        name: act.name,
+        lat: act.location?.latitude,
+        lng: act.location?.longitude,
+      };
+    }
+  });
   return (
     <div>
       <Suspense>
@@ -50,6 +61,12 @@ export default async function DayItinerary({
                 <PlannerInfo planner={mockItinerary.planner} />
                 <ItineraryReviews reviews={mockItinerary.reviews} />
                 <UserActions />
+                <div className="">
+                  <p className="text-2xl font-bold mb-4">
+                    Find in the on the map
+                  </p>
+                  <GoogleMapsPlaces places={places} />
+                </div>
               </div>
             </div>
           </div>

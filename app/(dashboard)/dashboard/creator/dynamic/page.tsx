@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import data from "../../../../../../scrapper/data.json";
 import { createNewItem } from "./actions";
-import LocationInput from "@/app/components/location-input";
+// import LocationInput from "@/app/components/location-input";
 import { Schema } from "@/backend/amplify/data/resource";
 import { generateClient } from "aws-amplify/api";
 
@@ -242,7 +242,7 @@ export default function ItineraryForm() {
               />
             </div>
             <div className="space-y-2">
-              <LocationInput setGeoLocation={setLocation} />
+              {/* <LocationInput setGeoLocation={setLocation} /> */}
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-start space-y-4 md:space-y-0 md:space-x-4">

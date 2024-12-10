@@ -10,52 +10,46 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning={true}>
-        <header className="px-4 lg:px-6 h-14 flex items-center container mx-auto">
-          <Link className="flex items-center justify-center" href="/">
-            <MapPin className="h-6 w-6 text-blue-600" />
-            <span className="ml-2 text-2xl font-bold text-gray-900">
-              Vitrav
-            </span>
-          </Link>
-          <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
-            {/* <Link
+      <body suppressHydrationWarning={true} className="bg-background">
+        <header className="  ">
+          <div className="container mx-auto px-4 lg:px-6 h-14 flex items-center">
+            <Link className="flex items-center justify-center" href="/">
+              <MapPin className="h-6 w-6 text-blue-600" />
+              <span className="ml-2 text-2xl font-bold ">Vitrav</span>
+            </Link>
+            <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
+              {/* <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
             Features
           </Link> */}
-            {/* <Link
+              {/* <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
             How It Works
           </Link> */}
-            <Link
-              className="text-sm font-medium hover:underline underline-offset-4"
-              href="/dashboard"
-            >
-              Create a plan
-            </Link>
-            <ModeToggle />
-          </nav>
-          {/* <Button className="ml-4" variant="outline" size="icon">
-          <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle menu</span>
-        </Button> */}
+              <Link
+                className="text-sm font-medium hover:underline underline-offset-4"
+                href="/dashboard"
+              >
+                Create a plan
+              </Link>
+              <ModeToggle />
+            </nav>
+          </div>
         </header>
         {children}
-        <footer className="bg-muted">
+        <footer className="bg-primary text-primary-foreground">
           <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div>
                 <Link className="flex items-center justify-start" href="/">
                   <MapPin className="h-6 w-6 text-blue-600" />
-                  <span className="ml-2 text-2xl font-bold text-gray-900">
-                    Vitrav
-                  </span>
+                  <span className="ml-2 text-2xl font-bold">Vitrav</span>
                 </Link>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="mt-2 text-sm ">
                   Plan your perfect trip with curated itineraries.
                 </p>
               </div>
@@ -129,7 +123,7 @@ export default async function RootLayout({
               </div>
             </div>
             <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-              © {new Date().getFullYear()} TripPlanner. All rights reserved.
+              © {new Date().getFullYear()} Vitrav. All rights reserved.
             </div>
           </div>
         </footer>

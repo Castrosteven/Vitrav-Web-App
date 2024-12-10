@@ -50,7 +50,7 @@ export function SearchSection() {
   const priceLevels = client.enums.PriceLevel.values();
   const numberOfPeople = client.enums.NumberOfPeople.values();
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-lg">
+    <div className="w-full max-w-4xl mx-auto p-4 bg-secondary text-secondary-foreground rounded-lg shadow-lg">
       <form onSubmit={handleSearch} className="space-y-4">
         <SearchLocation />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -108,7 +108,7 @@ export function SearchSection() {
             </SelectContent>
           </Select>
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" variant={"default"}>
           Search Itineraries
         </Button>
       </form>

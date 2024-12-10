@@ -83,8 +83,8 @@ export const mockItinerary: DayItinerary = {
     },
   ],
   planner: {
-    name: "Sophie Dubois",
-    bio: "Local Parisian and certified tour guide with 10 years of experience showcasing the best of the City of Light.",
+    name: "Vitrav AI",
+    bio: "This itinerary was generated using Vitrav's AI Day planner.",
     avatar: "/placeholder.svg?height=100&width=100",
     eventsCreated: 47,
     profileLink: "/planner/sophie-dubois",

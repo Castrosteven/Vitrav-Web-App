@@ -14,11 +14,11 @@ interface StepCardProps {
 
 function StepCard({ icon, title, description }: StepCardProps) {
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden bg-secondary text-secondary-foreground">
       <CardContent className="p-6 space-y-4">
         <div className="flex justify-center">{icon}</div>
         <h2 className="text-2xl font-semibold text-center">{title}</h2>
-        <p className="text-center text-muted-foreground">{description}</p>
+        <p className="text-center ">{description}</p>
         {/* <Image
           src={image}
           alt={title}
@@ -32,41 +32,14 @@ function StepCard({ icon, title, description }: StepCardProps) {
 }
 
 export default async function VitravLandingPage() {
-  // const filters = await searchParams;
-  // console.log(filters);
-  // const appliedFilters: Record<
-  //   keyof FilterParams,
-  //   {
-  //     eq: string;
-  //   }
-  // > = {} as FilterParams;
-
-  // if (filters.price) {
-  //   Object.assign(appliedFilters, {
-  //     priceRange: { eq: filters.price },
-  //   });
-  // }
-  // if (filters.people) {
-  //   Object.assign(appliedFilters, {
-  //     numberOfPeople: { eq: filters.people },
-  //   });
-  // }
-
-  // const { data, errors } = await cookieBasedClient.models.Itinerary.list({
-  //   filter: appliedFilters,
-  // });
-  // if (errors) {
-  //   throw new Error(errors[0].message);
-  // }
-
   return (
-    <div className="bg-background">
-      <section className="bg-primary  py-12">
+    <div className="">
+      <section className=" bg-primary text-primary-foreground py-12">
         <div className="container mx-auto px-4 ">
-          <h1 className="text-4xl font-bold mb-4  text-primary-foreground ">
+          <h1 className="text-4xl font-bold mb-4 ">
             Find Your Perfect Itinerary
           </h1>
-          <p className="text-xl mb-8  text-primary-foreground">
+          <p className="text-xl mb-8">
             Discover and plan amazing trips with our curated itineraries
           </p>
           <SearchSection />

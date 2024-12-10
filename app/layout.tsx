@@ -21,7 +21,7 @@ export default async function Layout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider
-          // attribute="class"
+          attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
