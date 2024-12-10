@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LoadScript, StandaloneSearchBox } from "@react-google-maps/api";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -24,7 +24,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { XCircleIcon } from "lucide-react";
 import Image from "next/image";
-
+import { generateClient } from "aws-amplify/api";
+import { Schema } from "@/backend/amplify/data/resource";
+import {
+  NumberOfPeople,
+  ItineraryType,
+} from "@/backend/amplify/functions/generateDynamicActivitiesFromItinerary/graphql/API";
+import { saveItineraryAction } from "./actions";
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 interface Place {
@@ -38,8 +44,8 @@ interface Place {
 
 interface Itinerary {
   title: string;
-  category: string;
-  numberOfPeople: number;
+  category: Schema["ItineraryType"]["type"];
+  numberOfPeople: Schema["NumberOfPeople"]["type"];
   places: Place[];
 }
 
@@ -100,10 +106,10 @@ const DraggablePlace = ({
         </XCircleIcon>
       </div>
       <div>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Image src={""} alt="" width={400} height={400} />
-        </div>
-        <div className="w-full">
+        </div> */}
+        {/* <div className="w-full">
           <Textarea
             placeholder="Add a description"
             value={place.description}
@@ -119,17 +125,24 @@ const DraggablePlace = ({
             onChange={(e) => updatePlace(place.id, "link", e.target.value)}
             className="mt-2"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
+interface EnummsCollection {
+  itineraryTypes: Schema["ItineraryType"]["type"][];
+  NumberOfPeople: Schema["NumberOfPeople"]["type"][];
+  PriceLevel: Schema["PriceLevel"]["type"][];
+}
+
 export default function DailyItinerary() {
+  const [enums, setEnums] = useState<EnummsCollection>();
   const [itinerary, setItinerary] = useState<Itinerary>({
     title: "",
-    category: "",
-    numberOfPeople: 1,
+    category: ItineraryType.ACTIVE,
+    numberOfPeople: NumberOfPeople.ONE,
     places: [],
   });
   const [searchBox, setSearchBox] =
@@ -193,10 +206,27 @@ export default function DailyItinerary() {
     });
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log("Saving itinerary:", itinerary);
+    const newItinerary = await saveItineraryAction(JSON.stringify(itinerary));
+    console.log(newItinerary);
   };
 
+  const fetchEnums = async () => {
+    const client = generateClient<Schema>();
+    const itineraryTypes = client.enums.ItineraryType.values();
+    const NumberOfPeople = client.enums.NumberOfPeople.values();
+    const PriceLevel = client.enums.PriceLevel.values();
+    setEnums({
+      itineraryTypes,
+      NumberOfPeople,
+      PriceLevel,
+    });
+  };
+
+  useEffect(() => {
+    fetchEnums();
+  }, []);
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex flex-col gap-4 h-full max-h-full w-full overflow-hidden">
@@ -222,34 +252,52 @@ export default function DailyItinerary() {
                 <Select
                   value={itinerary.category}
                   onValueChange={(value) =>
-                    setItinerary((prev) => ({ ...prev, category: value }))
+                    setItinerary((prev) => ({
+                      ...prev,
+                      category: value as ItineraryType,
+                    }))
                   }
                 >
                   <SelectTrigger id="category">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="work">Work</SelectItem>
-                    <SelectItem value="leisure">Leisure</SelectItem>
-                    <SelectItem value="travel">Travel</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    {enums &&
+                      enums.itineraryTypes.map((i) => {
+                        return (
+                          <SelectItem key={i} value={i}>
+                            {i}
+                          </SelectItem>
+                        );
+                      })}
                   </SelectContent>
                 </Select>
               </div>
               <div className="w-full">
-                <Label htmlFor="numberOfPeople">Number of People</Label>
-                <Input
-                  id="numberOfPeople"
-                  type="number"
+                <Label htmlFor="numberOfPeople">Number Of People</Label>
+                <Select
                   value={itinerary.numberOfPeople}
-                  onChange={(e) =>
+                  onValueChange={(value) =>
                     setItinerary((prev) => ({
                       ...prev,
-                      numberOfPeople: parseInt(e.target.value) || 1,
+                      numberOfPeople: value as NumberOfPeople,
                     }))
                   }
-                  min={1}
-                />
+                >
+                  <SelectTrigger id="numberOfPeople">
+                    <SelectValue placeholder="Select number of peopl" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {enums &&
+                      enums.NumberOfPeople.map((i) => {
+                        return (
+                          <SelectItem key={i} value={i}>
+                            {i}
+                          </SelectItem>
+                        );
+                      })}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </CardContent>

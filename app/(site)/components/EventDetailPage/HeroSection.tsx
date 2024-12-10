@@ -1,24 +1,17 @@
 import { CalendarDays, MapPin, Users } from "lucide-react";
-import { cookies } from "next/headers";
-// import Image from "next/image";
 interface HeroSectionProps {
   title: string;
-  date: string;
+  // date: string;
   completions: number;
+  place: string;
 }
 
 export async function HeroSection({
   title,
-  date,
+  // date,
   completions,
+  place,
 }: HeroSectionProps) {
-  const cookieStore = await cookies();
-  const position = cookieStore.get("position");
-  if (!position) {
-    console.error("No location found in cookies");
-    throw new Error("No location found in cookies");
-  }
-  const values = JSON.parse(position.value) as google.maps.places.PlaceResult;
   return (
     <div className="relative py-16 bg-primary text-primary-foreground">
       <div className="absolute inset-0 overflow-hidden">
@@ -33,13 +26,13 @@ export async function HeroSection({
       <div className="relative container mx-auto px-4">
         <h1 className="text-4xl font-bold mb-4">{title}</h1>
         <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <CalendarDays className="w-5 h-5 mr-2" />
             <span>{date}</span>
-          </div>
+          </div> */}
           <div className="flex items-center">
             <MapPin className="w-5 h-5 mr-2" />
-            <span>{values.formatted_address}</span>
+            <span>{place}</span>
           </div>
           <div className="flex items-center">
             <Users className="w-5 h-5 mr-2" />

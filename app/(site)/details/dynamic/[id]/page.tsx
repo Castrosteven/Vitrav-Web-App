@@ -7,12 +7,21 @@ import GoogleMapsPlaces from "@/app/(site)/components/Map";
 import { mockItinerary } from "@/app/mockItinerary";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
 import { Suspense } from "react";
+
+interface SearchParams {
+  latitude: string;
+  longitude: string;
+  category: string;
+  price: string;
+  people: string;
+  place: string;
+}
 export default async function DayItinerary({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ latitude: string; longitude: string; place: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const { id } = await params;
   const { latitude, longitude } = await searchParams;
@@ -32,24 +41,35 @@ export default async function DayItinerary({
     throw new Error("Failed to fetch data");
   }
 
-  const places = data.activities.map((act) => {
-    if (act) {
-      return {
-        id: act.id || "",
-        name: act.name,
-        lat: act.location?.latitude,
-        lng: act.location?.longitude,
-      };
-    }
-  });
+  const places = data.activities
+    .map((act) => {
+      if (
+        act &&
+        act.location &&
+        act.name &&
+        act.id &&
+        act.location.latitude &&
+        act.location.longitude
+      ) {
+        return {
+          id: act.id,
+          name: act.name,
+          lat: act.location.latitude!,
+          lng: act.location.longitude!,
+        };
+      }
+      return undefined;
+    })
+    .filter((place) => place !== undefined);
   return (
     <div>
       <Suspense>
         <div>
           <HeroSection
             title={`${data.itineraryTitle}`}
-            date={"DATE"}
-            completions={10}
+            // date={"DATE"}
+            completions={Math.floor(Math.random() * 100)}
+            place={(await searchParams).place}
           />
           <div className="container mx-auto px-4 py-8">
             <div className="grid gap-8 md:grid-cols-3">
@@ -59,14 +79,14 @@ export default async function DayItinerary({
               </div>
               <div className="space-y-6">
                 <PlannerInfo planner={mockItinerary.planner} />
-                <ItineraryReviews reviews={mockItinerary.reviews} />
-                <UserActions />
+                {/* <ItineraryReviews reviews={mockItinerary.reviews} /> */}
                 <div className="">
                   <p className="text-2xl font-bold mb-4">
                     Find in the on the map
                   </p>
                   <GoogleMapsPlaces places={places} />
                 </div>
+                {/* <UserActions /> */}
               </div>
             </div>
           </div>

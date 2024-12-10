@@ -13,11 +13,10 @@ import { generateClient } from "aws-amplify/data";
 import { Schema } from "@/backend/amplify/data/resource";
 import SearchLocation from "../SearchLocation";
 import { useSearchParams, useRouter } from "next/navigation";
+import { DollarSign, Grid, Users } from "lucide-react"; // Example icons
 
 export function SearchSection() {
   const searchParams = useSearchParams();
-  // const pathname = usePathname();
-
   const { push } = useRouter();
   const [filters, setFilters] = useState<{
     price: string;
@@ -49,66 +48,96 @@ export function SearchSection() {
   const categoryTypes = client.enums.ItineraryType.values();
   const priceLevels = client.enums.PriceLevel.values();
   const numberOfPeople = client.enums.NumberOfPeople.values();
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4 bg-secondary text-secondary-foreground rounded-lg shadow-lg">
       <form onSubmit={handleSearch} className="space-y-4">
         <SearchLocation />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Select
-            onValueChange={(value) => setFilters({ ...filters, price: value })}
-            defaultValue={searchParams.get("price")?.toString()}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Price range" />
-            </SelectTrigger>
-            <SelectContent>
-              {priceLevels.map((p) => {
-                return (
+          {/* Price Range */}
+          <div>
+            <label className="block text-sm font-medium mb-1 flex items-center gap-2">
+              <DollarSign size={16} />
+              Price Range
+            </label>
+            <Select
+              onValueChange={(value) =>
+                setFilters({ ...filters, price: value })
+              }
+              defaultValue={searchParams.get("price")?.toString()}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a price range" />
+              </SelectTrigger>
+              <SelectContent>
+                {priceLevels.map((p) => (
                   <SelectItem key={p} value={p}>
                     {p}
                   </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          <Select
-            onValueChange={(value) =>
-              setFilters({ ...filters, category: value })
-            }
-            defaultValue={searchParams.get("category")?.toString()}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categoryTypes.map((categoryType) => {
-                return (
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium mb-1 flex items-center gap-2">
+              <Grid size={16} />
+              Category
+            </label>
+            <Select
+              onValueChange={(value) =>
+                setFilters({ ...filters, category: value })
+              }
+              defaultValue={searchParams.get("category")?.toString()}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categoryTypes.map((categoryType) => (
                   <SelectItem key={categoryType} value={categoryType}>
                     {categoryType}
                   </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          <Select
-            onValueChange={(value) => setFilters({ ...filters, people: value })}
-            defaultValue={searchParams.get("people")?.toString()}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Number of people" />
-            </SelectTrigger>
-            <SelectContent>
-              {numberOfPeople.map((p) => {
-                return (
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Number of People */}
+          <div>
+            <label className="block text-sm font-medium mb-1 flex items-center gap-2">
+              <Users size={16} />
+              Number of People
+            </label>
+            <Select
+              onValueChange={(value) =>
+                setFilters({ ...filters, people: value })
+              }
+              defaultValue={searchParams.get("people")?.toString()}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select number of people" />
+              </SelectTrigger>
+              <SelectContent>
+                {numberOfPeople.map((p) => (
                   <SelectItem key={p} value={p}>
                     {p}
                   </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <Button type="submit" className="w-full" variant={"default"}>
+
+        <Button
+          disabled={
+            !searchParams.get("latitude") || !searchParams.get("longitude")
+          }
+          type="submit"
+          className="w-full"
+          variant={"default"}
+        >
           Search Itineraries
         </Button>
       </form>

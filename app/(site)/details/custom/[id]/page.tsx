@@ -3,15 +3,27 @@ import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/Itiner
 import { PlannerInfo } from "@/app/(site)/components/EventDetailPage/plannerInfo";
 import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
 import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
-import { DayItinerary as DayItineraryType } from "@/app/types/itinerary";
+import GoogleMapsPlaces from "@/app/(site)/components/Map";
+import { mockItinerary } from "@/app/mockItinerary";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
+import { Suspense } from "react";
 
+interface SearchParams {
+  latitude: string;
+  longitude: string;
+  category: string;
+  price: string;
+  people: string;
+  place: string;
+}
 export default async function DayItinerary({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
-  const id = (await params).id;
+  const { id } = await params;
 
   const { data, errors } =
     await cookieBasedClient.queries.generateDynamicActivitiesFromItinerary({
@@ -21,99 +33,58 @@ export default async function DayItinerary({
     console.log(errors);
     throw new Error("Failed to fetch data");
   }
-  const formattedMorning = (): DayItineraryType["items"] => {
-    const morningActivities =
-      data.activities && data.activities.morningActivities;
 
-    const cleaned =
-      morningActivities &&
-      morningActivities.map((i) => {
-        const imageUrl =
-          i &&
-          i.photos &&
-          `https://places.googleapis.com/v1/${i.photos[0]?.name}/media?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&maxHeightPx=400&maxWidthPx=400`;
+  const places = data.activities
+    .map((act) => {
+      if (
+        act &&
+        act.location &&
+        act.name &&
+        act.id &&
+        act.location.latitude &&
+        act.location.longitude
+      ) {
         return {
-          date: "UIT", //remove
-          duration: "1h",
-          id: i?.id || "1",
-          image:
-            imageUrl || "https://source.unsplash.com/1600x900/?nature,water",
-          location: "New York",
-          longDescription: "This is a long description",
-          place: i?.formattedAddress || "New York",
-          rating: 4.5,
-          reviews: 100,
-          shortDescription:
-            i?.editorialSummary?.text ||
-            i?.generativeSummary?.description?.text ||
-            "Short description Here",
-          time: "10:00",
-          title: i?.displayName?.text || "Central Park",
+          id: act.id,
+          name: act.name,
+          lat: act.location.latitude!,
+          lng: act.location.longitude!,
         };
-      });
-
-    return (
-      cleaned || [
-        {
-          date: "2022-01-01",
-          duration: "1h",
-          id: "1",
-          image: "https://source.unsplash.com/1600x900/?nature,water",
-          location: "New York",
-          longDescription: "This is a long description",
-          place: "New York",
-          rating: 4.5,
-          reviews: 100,
-          shortDescription: "",
-          time: "10:00",
-          title: "Central Park",
-        },
-      ]
-    );
-  };
-
-  const mockItinerary: DayItineraryType = {
-    completions: 100,
-    date: "2022-01-01",
-    items: formattedMorning(),
-    planner: {
-      avatar: "https://source.unsplash.com/1600x900/?nature,water",
-      name: "John Doe",
-      bio: "This is a bio",
-      eventsCreated: 100,
-      profileLink: "/profile",
-    },
-    id: "1",
-    reviews: [
-      {
-        comment: "This is a great itinerary",
-        rating: 4.5,
-        id: "1",
-        user: "John Doe",
-      },
-    ],
-    title: data.itineraryTitle,
-  };
+      }
+      return undefined;
+    })
+    .filter((place) => place !== undefined);
   return (
     <div>
-      <HeroSection
-        title={mockItinerary.title}
-        date={mockItinerary.date}
-        completions={mockItinerary.completions}
-      />
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid gap-8 md:grid-cols-3">
-          <div className="md:col-span-2 space-y-6">
-            <h2 className="text-2xl font-bold mb-4">Itinerary Timeline</h2>
-            <Timeline items={mockItinerary.items} />
-          </div>
-          <div className="space-y-6">
-            <PlannerInfo planner={mockItinerary.planner} />
-            <ItineraryReviews reviews={mockItinerary.reviews} />
-            <UserActions />
+      <Suspense>
+        <div>
+          <HeroSection
+            title={`${data.itineraryTitle}`}
+            // date={"DATE"}
+            completions={Math.floor(Math.random() * 100)}
+            place={(await searchParams).place}
+          />
+          <div className="container mx-auto px-4 py-8">
+            <div className="grid gap-8 md:grid-cols-3">
+              <div className="md:col-span-2 space-y-6">
+                <h2 className="text-2xl font-bold mb-4">Itinerary Timeline</h2>
+                <Timeline items={data.activities} />
+              </div>
+              <div className="space-y-6">
+                <PlannerInfo planner={mockItinerary.planner} />
+                {/* <ItineraryReviews reviews={mockItinerary.reviews} /> */}
+                <div className="">
+                  <p className="text-2xl font-bold mb-4">
+                    Find in the on the map
+                  </p>
+                  <GoogleMapsPlaces places={places} />
+                </div>
+                {/* <UserActions /> */}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </Suspense>
     </div>
   );
 }

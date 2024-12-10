@@ -11,6 +11,7 @@ import {
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
 import { Schema } from "@/backend/amplify/data/resource";
 import Link from "next/link";
+import Breadcrumbs from "../components/BreadCrumbs";
 
 interface SearchParams {
   latitude: string;
@@ -35,15 +36,16 @@ const ResultsPage = async ({
 }: {
   searchParams: SearchParams;
 }) => {
-  const { category, place, people, price, latitude, longitude } = searchParams;
+  const { category, place, people, price } = searchParams;
   const resultMessage = `Showing results for ${category} in ${place} for ${people} people with a price range of ${price}`;
-
+  // const pathName = usePathname();
   const appliedFilters: FilterParams = {};
   if (price) appliedFilters.priceRange = { eq: price };
   if (people) appliedFilters.numberOfPeople = { eq: people };
 
   const { data, errors } = await cookieBasedClient.models.Itinerary.list({
     filter: appliedFilters,
+    limit: 10,
   });
 
   if (errors) {
@@ -57,13 +59,16 @@ const ResultsPage = async ({
           <p className="text-primary-foreground">{resultMessage}</p>
         </div>
       </h1>
+      <div className="container mx-auto">
+        <Breadcrumbs />
+      </div>
+
       <div className="flex flex-col gap-8 container mx-auto sm:p-6 md:p-0 mt-8 mb-8">
         {data.map((result: Schema["Itinerary"]["type"]) => (
           <ItineraryCard
-            latitude={latitude}
-            longitude={longitude}
             key={result.id}
             result={result}
+            searchParams={searchParams}
           />
         ))}
       </div>
@@ -73,19 +78,25 @@ const ResultsPage = async ({
 
 const ItineraryCard = ({
   result,
-  latitude,
-  longitude,
+  searchParams,
 }: {
   result: Schema["Itinerary"]["type"];
-  latitude: string;
-  longitude: string;
+  searchParams: SearchParams;
 }) => {
   const itineraryUrl = `/details/${result.isDynamic ? "dynamic" : "custom"}/${
     result.id
   }`;
+  const params = new URLSearchParams();
+  params.append("latitude", searchParams.latitude);
+  params.append("longitude", searchParams.longitude);
+  params.append("place", searchParams.place);
+  params.append("price", searchParams.price);
+  params.append("category:", searchParams.category);
+  params.append("people:", searchParams.people);
+  console.log(searchParams);
   return (
     <Link
-      href={`${itineraryUrl}?latitude=${latitude}&longitude=${longitude}`}
+      href={`${itineraryUrl}?${params.toString()}`}
       className="pr-6 pl-6 md:pr-0 ml:p-0 md:w-4/6"
     >
       <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200">
