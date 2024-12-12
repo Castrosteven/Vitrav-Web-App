@@ -1,8 +1,8 @@
 import { HeroSection } from "@/app/(site)/components/EventDetailPage/HeroSection";
-import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/ItineraryReviews";
+// import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/ItineraryReviews";
 import { PlannerInfo } from "@/app/(site)/components/EventDetailPage/plannerInfo";
 import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
-import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
+// import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
 import GoogleMapsPlaces from "@/app/(site)/components/Map";
 import { mockItinerary } from "@/app/mockItinerary";
 import cookieBasedClient from "@/app/utils/cookieBasedClient";
