@@ -1,32 +1,20 @@
-// middleware.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { verifyToken } from "./lib/auth"; // Utility for token verification
+import type { NextRequest } from "next/server";
 
-import { fetchAuthSession } from "aws-amplify/auth/server";
-import { runWithAmplifyServerContext } from "./app/utils/amplifyServerUtils";
-
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-
-  const authenticated = await runWithAmplifyServerContext({
-    nextServerContext: { request, response },
-    operation: async (contextSpec) => {
-      try {
-        const session = await fetchAuthSession(contextSpec, {});
-        return session.tokens !== undefined;
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
-    },
-  });
-
-  if (authenticated) {
-    return response;
+export function middleware(request: NextRequest) {
+  // Extract token from cookies
+  console.log("Hello from middleware");
+  const token = request.cookies.get("access_token");
+  // If the token is missing or invalid, redirect to login page
+  if (!token || !verifyToken(token.value)) {
+    console.log(token);
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  return NextResponse.redirect(new URL("/login", request.url));
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard", "/profile"],
+  matcher: ["/dashboard", "/profile", "/settings"], // Protect these routes
 };

@@ -1,11 +1,12 @@
 import { HeroSection } from "@/app/(site)/components/EventDetailPage/HeroSection";
-import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/ItineraryReviews";
+// import { ItineraryReviews } from "@/app/(site)/components/EventDetailPage/ItineraryReviews";
 import { PlannerInfo } from "@/app/(site)/components/EventDetailPage/plannerInfo";
 import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
-import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
+// import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
 import GoogleMapsPlaces from "@/app/(site)/components/Map";
 import { mockItinerary } from "@/app/mockItinerary";
-import cookieBasedClient from "@/app/utils/cookieBasedClient";
+import axios from "axios";
+// import cookieBasedClient from "@/app/utils/cookieBasedClient";
 import { Suspense } from "react";
 
 interface SearchParams {
@@ -30,16 +31,26 @@ export default async function DayItinerary({
     console.error("No geometry found in location");
     throw new Error("No geometry found in location");
   }
-  const { data, errors } =
-    await cookieBasedClient.queries.generateDynamicActivitiesFromItinerary({
-      dynamicItineraryId: id,
-      lat: parseFloat(latitude),
-      long: parseFloat(longitude),
-    });
-  if (errors || !data) {
-    console.log(errors);
-    throw new Error("Failed to fetch data");
-  }
+  // const { data, errors } =
+  //   await cookieBasedClient.queries.generateDynamicActivitiesFromItinerary({
+  //     dynamicItineraryId: id,
+  //     lat: parseFloat(latitude),
+  //     long: parseFloat(longitude),
+  //   });
+  // if (errors || !data) {
+  //   console.log(errors);
+  //   throw new Error("Failed to fetch data");
+  // }
+
+  const { data } = await axios.get(
+    `http://localhost:3000/itineraries/generate/${id}`,
+    {
+      params: {
+        lat: parseFloat(latitude),
+        long: parseFloat(longitude),
+      },
+    }
+  );
 
   const places = data.activities
     .map((act) => {
@@ -66,7 +77,7 @@ export default async function DayItinerary({
       <Suspense>
         <div>
           <HeroSection
-            title={`${data.itineraryTitle}`}
+            title={`${data.itinerary_title}`}
             // date={"DATE"}
             completions={Math.floor(Math.random() * 100)}
             place={(await searchParams).place}

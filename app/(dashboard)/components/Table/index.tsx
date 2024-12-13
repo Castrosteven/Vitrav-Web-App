@@ -23,9 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronUp, ChevronDown } from "lucide-react";
-import { Schema } from "@/backend/amplify/data/resource";
 import { useRouter } from "next/navigation";
-import { StorageImage } from "@aws-amplify/ui-react-storage";
 
 interface Itinerary {
   id: string;
@@ -40,41 +38,21 @@ interface Itinerary {
 }
 
 interface ItineraryTableProps {
-  itineraries: Schema["Itinerary"]["type"][];
+  itineraries: unknown[];
 }
 
 export default function ItineraryTable({ itineraries }: ItineraryTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
   const router = useRouter();
-  const formattedItineraries: Itinerary[] = itineraries.map((itinerary) => {
-    return {
-      id: itinerary.id,
-      image: "/placeholder.svg?height=100&width=100",
-      title: itinerary.itineraryTitle,
-      description: "Discover the hidden gems of the city",
-      location: "New York, NY",
-      people: 3,
-      price: 2,
-      isDynamic: itinerary.isDynamic,
-      itineraryType: itinerary.itineraryType,
-    };
-  });
+  const formattedItineraries: Itinerary[] = [];
 
   const columns: ColumnDef<Itinerary>[] = [
     {
       accessorKey: "image",
       header: "Image",
       cell: ({ row }) => {
-        return row.original.isDynamic ? (
-          <StorageImage
-            alt="cat"
-            path={`dynamic_pictures/${row.original.itineraryType}.webp`}
-            width={100}
-            height={100}
-            className="rounded-md object-cover"
-          />
-        ) : (
+        return (
           <Image
             src={row.original.image}
             alt={row.original.title}

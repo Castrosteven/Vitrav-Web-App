@@ -8,10 +8,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import cookieBasedClient from "@/app/utils/cookieBasedClient";
-import { Schema } from "@/backend/amplify/data/resource";
 import Link from "next/link";
 import Breadcrumbs from "../components/BreadCrumbs";
+import axios from "axios";
+
+export interface Itinerary {
+  id: string;
+  itinerary_description: string;
+  itinerary_title: string;
+  itinerary_thumbnail: string;
+  createdAt: string;
+  updatedAt: string;
+  itinerary_type: string;
+  itinerary_category: string;
+  google_places_primary_place_types: any[];
+  google_places_place_ids: any[];
+  userId: string;
+  latitude: number;
+  longitude: number;
+  distance: number;
+}
 
 interface SearchParams {
   latitude: string;
@@ -43,15 +59,15 @@ const ResultsPage = async ({
   if (price) appliedFilters.priceRange = { eq: price };
   if (people) appliedFilters.numberOfPeople = { eq: people };
 
-  const { data, errors } = await cookieBasedClient.models.Itinerary.list({
-    filter: appliedFilters,
-    limit: 10,
+  const { data } = await axios.get<{
+    itineraries: Itinerary[];
+  }>("http://localhost:3000/itineraries", {
+    params: {
+      lat: searchParams.latitude,
+      long: searchParams.longitude,
+    },
   });
-
-  if (errors) {
-    throw new Error(errors[0].message);
-  }
-
+  console.log(data);
   return (
     <div className=" h-full flex flex-1 flex-col ">
       <h1 className="text-2xl font-extrabold text-gray-800 mb-6 h-36 bg-primary justify-center items-center flex">
@@ -64,7 +80,7 @@ const ResultsPage = async ({
       </div>
 
       <div className="flex flex-col gap-8 container mx-auto sm:p-6 md:p-0 mt-8 mb-8">
-        {data.map((result: Schema["Itinerary"]["type"]) => (
+        {data.itineraries.map((result) => (
           <ItineraryCard
             key={result.id}
             result={result}
@@ -80,12 +96,12 @@ const ItineraryCard = ({
   result,
   searchParams,
 }: {
-  result: Schema["Itinerary"]["type"];
+  result: Itinerary;
   searchParams: SearchParams;
 }) => {
-  const itineraryUrl = `/details/${result.isDynamic ? "dynamic" : "custom"}/${
-    result.id
-  }`;
+  const itineraryUrl = `/details/${
+    result.itinerary_type === "DYNAMIC" ? "dynamic" : "custom"
+  }/${result.id}`;
   const params = new URLSearchParams();
   params.append("latitude", searchParams.latitude);
   params.append("longitude", searchParams.longitude);
@@ -117,7 +133,7 @@ const ItineraryCard = ({
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-lg font-bold text-gray-800">
-                    {result.itineraryTitle}
+                    {result.itinerary_title}
                   </CardTitle>
                   <CardDescription className="text-sm text-gray-500 mt-1">
                     Explore the rich history with a guided tour through its most
@@ -125,7 +141,7 @@ const ItineraryCard = ({
                   </CardDescription>
                 </div>
                 <Badge variant="secondary" className="text-xs px-2 py-1">
-                  {result.itineraryType}
+                  {result.itinerary_type}
                 </Badge>
               </div>
             </CardHeader>
@@ -134,14 +150,13 @@ const ItineraryCard = ({
                 <div className="flex items-center text-gray-600">
                   <DollarSign className="w-4 h-4 mr-2" />
                   <span className="text-sm font-medium">
-                    ${result.priceRange}
+                    {/* ${result.priceRange} */}
+                    Free
                   </span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Users className="w-4 h-4 mr-2" />
-                  <span className="text-sm font-medium">
-                    For {result.numberOfPeople} people
-                  </span>
+                  <span className="text-sm font-medium">For 10 people</span>
                 </div>
               </div>
             </CardContent>

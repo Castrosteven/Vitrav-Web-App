@@ -1,4 +1,3 @@
-import "@aws-amplify/ui-react/styles.css";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "../components/toggle";

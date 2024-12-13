@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import "@aws-amplify/ui-react/styles.css";
 import "./globals.css";
-import ConfigureAmplifyClientSide from "./components/ConfigureAmplify";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
+import { ApolloWrapper } from "./components/ApolloWrapper";
 
 export const metadata: Metadata = {
   title: "Vitrav",
@@ -26,7 +25,7 @@ export default async function Layout({
           enableSystem
           disableTransitionOnChange
         >
-          <ConfigureAmplifyClientSide>{children}</ConfigureAmplifyClientSide>
+          <ApolloWrapper>{children}</ApolloWrapper>
         </ThemeProvider>
       </body>
     </html>

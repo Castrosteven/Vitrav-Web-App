@@ -24,12 +24,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { XCircleIcon } from "lucide-react";
 import Image from "next/image";
-import { generateClient } from "aws-amplify/api";
-import { Schema } from "@/backend/amplify/data/resource";
-import {
-  NumberOfPeople,
-  ItineraryType,
-} from "@/backend/amplify/functions/generateDynamicActivitiesFromItinerary/graphql/API";
 import { saveItineraryAction } from "./actions";
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
@@ -44,8 +38,8 @@ interface Place {
 
 interface Itinerary {
   title: string;
-  category: Schema["ItineraryType"]["type"];
-  numberOfPeople: Schema["NumberOfPeople"]["type"];
+  category: string;
+  numberOfPeople: string;
   places: Place[];
 }
 
@@ -132,17 +126,17 @@ const DraggablePlace = ({
 };
 
 interface EnummsCollection {
-  itineraryTypes: Schema["ItineraryType"]["type"][];
-  NumberOfPeople: Schema["NumberOfPeople"]["type"][];
-  PriceLevel: Schema["PriceLevel"]["type"][];
+  itineraryTypes: string[];
+  NumberOfPeople: string[];
+  PriceLevel: string[];
 }
 
 export default function DailyItinerary() {
   const [enums, setEnums] = useState<EnummsCollection>();
   const [itinerary, setItinerary] = useState<Itinerary>({
     title: "",
-    category: ItineraryType.ACTIVE,
-    numberOfPeople: NumberOfPeople.ONE,
+    category: "",
+    numberOfPeople: "",
     places: [],
   });
   const [searchBox, setSearchBox] =
@@ -213,15 +207,15 @@ export default function DailyItinerary() {
   };
 
   const fetchEnums = async () => {
-    const client = generateClient<Schema>();
-    const itineraryTypes = client.enums.ItineraryType.values();
-    const NumberOfPeople = client.enums.NumberOfPeople.values();
-    const PriceLevel = client.enums.PriceLevel.values();
-    setEnums({
-      itineraryTypes,
-      NumberOfPeople,
-      PriceLevel,
-    });
+    // const client = generateClient<Schema>();
+    // const itineraryTypes = client.enums.ItineraryType.values();
+    // const NumberOfPeople = client.enums.NumberOfPeople.values();
+    // const PriceLevel = client.enums.PriceLevel.values();
+    // setEnums({
+    //   itineraryTypes,
+    //   NumberOfPeople,
+    //   PriceLevel,
+    // });
   };
 
   useEffect(() => {
@@ -254,7 +248,7 @@ export default function DailyItinerary() {
                   onValueChange={(value) =>
                     setItinerary((prev) => ({
                       ...prev,
-                      category: value as ItineraryType,
+                      category: value,
                     }))
                   }
                 >
@@ -280,7 +274,7 @@ export default function DailyItinerary() {
                   onValueChange={(value) =>
                     setItinerary((prev) => ({
                       ...prev,
-                      numberOfPeople: value as NumberOfPeople,
+                      numberOfPeople: value,
                     }))
                   }
                 >

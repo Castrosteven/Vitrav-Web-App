@@ -9,8 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { generateClient } from "aws-amplify/data";
-import { Schema } from "@/backend/amplify/data/resource";
 import SearchLocation from "../SearchLocation";
 import { useSearchParams, useRouter } from "next/navigation";
 import { DollarSign, Grid, Users } from "lucide-react"; // Example icons
@@ -29,7 +27,7 @@ export function SearchSection() {
     people: "",
     place: "",
   });
-  const client = generateClient<Schema>();
+  // const client = generateClient<Schema>();
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams(searchParams);
@@ -45,9 +43,9 @@ export function SearchSection() {
     push("/results?" + params.toString());
   };
 
-  const categoryTypes = client.enums.ItineraryType.values();
-  const priceLevels = client.enums.PriceLevel.values();
-  const numberOfPeople = client.enums.NumberOfPeople.values();
+  // const categoryTypes = client.enums.ItineraryType.values();
+  // const priceLevels = client.enums.PriceLevel.values();
+  // const numberOfPeople = client.enums.NumberOfPeople.values();
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 bg-secondary text-secondary-foreground rounded-lg shadow-lg">
@@ -70,11 +68,11 @@ export function SearchSection() {
                 <SelectValue placeholder="Select a price range" />
               </SelectTrigger>
               <SelectContent>
-                {priceLevels.map((p) => (
+                {/* {priceLevels.map((p) => (
                   <SelectItem key={p} value={p}>
                     {p}
                   </SelectItem>
-                ))}
+                ))} */}
               </SelectContent>
             </Select>
           </div>
@@ -95,11 +93,11 @@ export function SearchSection() {
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                {categoryTypes.map((categoryType) => (
+                {/* {categoryTypes.map((categoryType) => (
                   <SelectItem key={categoryType} value={categoryType}>
                     {categoryType}
                   </SelectItem>
-                ))}
+                ))} */}
               </SelectContent>
             </Select>
           </div>
@@ -120,11 +118,11 @@ export function SearchSection() {
                 <SelectValue placeholder="Select number of people" />
               </SelectTrigger>
               <SelectContent>
-                {numberOfPeople.map((p) => (
+                {/* {numberOfPeople.map((p) => (
                   <SelectItem key={p} value={p}>
                     {p}
                   </SelectItem>
-                ))}
+                ))} */}
               </SelectContent>
             </Select>
           </div>

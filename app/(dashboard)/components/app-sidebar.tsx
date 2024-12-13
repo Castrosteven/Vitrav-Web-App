@@ -37,12 +37,8 @@ export const data = {
       isActive: true,
       items: [
         {
-          title: "Dynamic",
-          url: "/dashboard/creator/dynamic",
-        },
-        {
-          title: "Custom",
-          url: "/dashboard/creator/custom",
+          title: "Create New Itinerary",
+          url: "/dashboard/creator",
         },
         // {
         //   title: "Settings",
