@@ -47,9 +47,9 @@ const SearchLocation = () => {
     }
   }, [isLoaded]);
 
-  if (loadError) {
-    return <div>Error loading Google Maps</div>;
-  }
+  // if (loadError) {
+  //   return <div>Error loading Google Maps</div>;
+  // }
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();

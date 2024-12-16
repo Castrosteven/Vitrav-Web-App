@@ -5,7 +5,8 @@ import { Timeline } from "@/app/(site)/components/EventDetailPage/TimeLine";
 // import { UserActions } from "@/app/(site)/components/EventDetailPage/UserActions";
 import GoogleMapsPlaces from "@/app/(site)/components/Map";
 import { mockItinerary } from "@/app/mockItinerary";
-import cookieBasedClient from "@/app/utils/cookieBasedClient";
+import axios from "axios";
+// import cookieBasedClient from "@/app/utils/cookieBasedClient";
 import { Suspense } from "react";
 
 interface SearchParams {
@@ -24,15 +25,17 @@ export default async function DayItinerary({
   searchParams: Promise<SearchParams>;
 }) {
   const { id } = await params;
+  const { latitude, longitude } = await searchParams;
 
-  const { data, errors } =
-    await cookieBasedClient.queries.generateDynamicActivitiesFromItinerary({
-      dynamicItineraryId: id,
-    });
-  if (errors || !data) {
-    console.log(errors);
-    throw new Error("Failed to fetch data");
-  }
+  const { data } = await axios.get(
+    `http://localhost:3000/itineraries/generate/${id}`,
+    {
+      params: {
+        lat: parseFloat(latitude),
+        long: parseFloat(longitude),
+      },
+    }
+  );
 
   const places = data.activities
     .map((act) => {
