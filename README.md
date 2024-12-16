@@ -1,37 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vitrav
 
-## Getting Started
+An AI-powered itinerary travel planner that helps you create personalized and optimized travel itineraries. Vitrav leverages AI and real-time data to deliver customized travel plans based on user preferences, destinations, and travel timeframes.
 
-First, run the development server:
+## Table of Contents
+
+1. [Features](#features)
+2. [Tech Stack](#tech-stack)
+3. [Setup and Installation](#setup-and-installation)
+4. [Environment Variables](#environment-variables)
+5. [Usage](#usage)
+6. [Deployment](#deployment)
+7. [Contributing](#contributing)
+8. [License](#license)
+
+---
+
+## Features
+
+- **AI-Powered Planning**: Personalized itineraries based on your interests and preferences.
+- **Real-Time Data**: Fetch accurate location data and recommendations.
+- **Interactive Maps**: Visualize your itinerary on a map.
+- **User Authentication**: Secure sign-in and personalized profiles.
+- **Responsive Design**: Works seamlessly across devices.
+- **Save & Share Itineraries**: Easily save and share travel plans.
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend**: NestJS, Prisma
+- **Database**: PostgreSQL
+- **Authentication**: Google Auth
+- **Maps API**: Google Maps API
+- **Deployment**: Vercel (Frontend), AWS Lambda (Backend)
+
+## Setup and Installation
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- **Node.js** (v18 or higher)
+- **npm** (v9 or higher) or **yarn**
+- **PostgreSQL**
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/vitrav.git
+cd vitrav
+```
+
+### Install Dependencies
+
+Using npm:
+
+```bash
+npm install
+```
+
+Or using yarn:
+
+```bash
+yarn install
+```
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory and add the following environment variables:
+
+```plaintext
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+
+```
+
+## Usage
+
+### Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Vercel
 
-## Learn More
+1. Install the [Vercel CLI](https://vercel.com/docs/cli):
+   ```bash
+   npm install -g vercel
+   ```
+2. Deploy the app:
+   ```bash
+   vercel
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+Follow the prompts to complete deployment.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contributions are welcome! Please follow these steps:
 
-## Deploy on Vercel
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature/your-feature-name`.
+3. Make changes and commit them: `git commit -m "Add some feature"`.
+4. Push to the branch: `git push origin feature/your-feature-name`.
+5. Open a pull request.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Vitrav-Web-App
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
