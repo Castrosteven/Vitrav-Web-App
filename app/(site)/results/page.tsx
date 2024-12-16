@@ -116,17 +116,18 @@ const ItineraryCard = ({
     >
       <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200">
         <div className="md:flex">
-          {/* <div className="md:w-1/3 h-48 md:h-full relative">
-            {result.image && (
+          <div className="md:w-1/3 h-48 md:h-full relative">
+            {result.itinerary_thumbnail && (
               <Image
-                src={result.image}
-                alt={result.itineraryTitle}
-                layout="fill"
+                src={result.itinerary_thumbnail}
+                alt={result.itinerary_title}
                 objectFit="cover"
                 className="rounded-t-md md:rounded-none md:rounded-l-md"
+                width={300}
+                height={200}
               />
             )}
-          </div> */}
+          </div>
           <div className="md:w-2/3 p-4">
             <CardHeader>
               <div className="flex justify-between items-start">

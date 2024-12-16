@@ -15,6 +15,9 @@ const nextConfig = {
       {
         hostname: "source.unsplash.com",
       },
+      {
+        hostname: "oaidalleapiprodscus.blob.core.windows.net",
+      },
     ],
   },
 };
