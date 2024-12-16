@@ -65,6 +65,7 @@ const ResultsPage = async ({
     params: {
       lat: searchParams.latitude,
       long: searchParams.longitude,
+      place: searchParams.place,
     },
   });
   console.log(data);
@@ -99,9 +100,7 @@ const ItineraryCard = ({
   result: Itinerary;
   searchParams: SearchParams;
 }) => {
-  const itineraryUrl = `/details/${
-    result.itinerary_type === "DYNAMIC" ? "dynamic" : "custom"
-  }/${result.id}`;
+  const itineraryUrl = `/details/${result.id}`;
   const params = new URLSearchParams();
   params.append("latitude", searchParams.latitude);
   params.append("longitude", searchParams.longitude);
