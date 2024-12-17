@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CalendarDays, Clock, Users, DollarSign } from "lucide-react";
+import { Users, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,

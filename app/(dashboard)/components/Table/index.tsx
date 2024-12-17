@@ -41,7 +41,7 @@ interface ItineraryTableProps {
   itineraries: unknown[];
 }
 
-export default function ItineraryTable({ itineraries }: ItineraryTableProps) {
+export default function ItineraryTable({}: ItineraryTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
   const router = useRouter();

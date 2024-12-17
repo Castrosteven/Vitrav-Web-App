@@ -21,9 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { XCircleIcon } from "lucide-react";
-import Image from "next/image";
 import { saveItineraryAction } from "./actions";
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
@@ -47,7 +45,7 @@ const DraggablePlace = ({
   place,
   index,
   movePlace,
-  updatePlace,
+
   removePlace,
 }: {
   place: Place;
@@ -132,7 +130,7 @@ interface EnummsCollection {
 }
 
 export default function DailyItinerary() {
-  const [enums, setEnums] = useState<EnummsCollection>();
+  const [enums] = useState<EnummsCollection>();
   const [itinerary, setItinerary] = useState<Itinerary>({
     title: "",
     category: "",

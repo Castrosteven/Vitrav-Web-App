@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, Users } from "lucide-react";
+import { MapPin, Users } from "lucide-react";
 interface HeroSectionProps {
   title: string;
   // date: string;

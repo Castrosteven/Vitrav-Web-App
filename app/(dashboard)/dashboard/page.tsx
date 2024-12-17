@@ -1,4 +1,4 @@
-import ItineraryTable from "../components/Table";
+// import ItineraryTable from "../components/Table";
 // import cookieBasedClient from "../../utils/cookieBasedClient";
 
 export default async function Page() {

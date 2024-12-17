@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Star } from "lucide-react";
 import Image from "next/image";
 
+//TODO: Add types
 export function TimelineItem({ item }: { item: any }) {
   const image = item.photos && item.photos[0];
   const ImageUrl = `https://places.googleapis.com/v1/${image?.name}/media?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&maxHeightPx=400&maxWidthPx=400`;
