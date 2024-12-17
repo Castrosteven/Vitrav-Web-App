@@ -28,7 +28,7 @@ const defaultCenter = {
 export default function GoogleMapsPlaces({ places }: GoogleMapsPlacesProps) {
   const [libraries] = useState<Library[]>(["places"]);
 
-  const { isLoaded, loadError } = useJsApiLoader({
+  const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries: libraries,
   });
