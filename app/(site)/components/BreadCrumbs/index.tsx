@@ -7,11 +7,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 
-const Breadcrumbs = async () => {
-  const pathname = usePathname();
-  const path = pathname.split("/");
+const Breadcrumbs = () => {
+  // const pathname = usePathname();
+  // const path = pathname.split("/");
   return (
     <Breadcrumb>
       <BreadcrumbList>
